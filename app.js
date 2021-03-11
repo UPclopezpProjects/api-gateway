@@ -11,8 +11,11 @@ global.port = {
 };
 global.path = {
   audit: '/exec/createUserSC',
+  getInitialToken: '/getInitialToken',
+  getEmail: '/getEmail/',
   userLogin: '/login',
   userCreation: '/userCreation',
+  userRegister: '/register',
   userDetails: '/userDetails/',
   usersDetails: '/usersDetails/',
   userUpdate: '/userUpdate/',

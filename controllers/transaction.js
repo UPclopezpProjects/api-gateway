@@ -1,4 +1,6 @@
 var axios = require('axios');
+var jwt = require('jwt-simple');
+
 
 function merchantsData(req, res){
     serviceInitMerchants(req, function(data, err) {
@@ -124,6 +126,60 @@ function serviceInitProductors(req, next) {
     });
 }
 
+function getInitialToken(req, res){
+    serviceIniGetToken(req, function(data, err) {
+        if (err) {
+            res.status(500).send({ message: err });
+        }else {
+          if(data.token){
+                res.status(200).send({ message: data.message, token: data.token });
+                //console.log(data);
+          }else {
+            res.status(200).send({ message: data.message });
+          }
+        }
+    });
+}
+
+function serviceIniGetToken(req, next) {
+    var url = 'http://'+host+':'+port.users+''+path.getInitialToken;
+    axios.get(url)
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function getEmail(req, res){
+    serviceInitGetEmail(req, function(data, err) {
+        if (err) {
+            res.status(500).send({ message: err });
+            //console.log(err);
+        }else {
+            res.status(200).send({ message: data.message });
+            //console.log(data);
+        }
+    });
+}
+
+function serviceInitGetEmail(req, next) {
+    var url = 'http://'+host+':'+port.users+''+path.getEmail+'?code='+req.query.code+'&email='+req.query.email+'';
+    console.log(url);
+    axios.get(url)
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
 function login(req, res){
     serviceInitLogin(req, function(data, err) {
         if (err) {
@@ -140,7 +196,7 @@ function serviceInitLogin(req, next) {
     axios.post(url, {
         email: req.body.email,
         password: req.body.password,
-        typeOfUser: req.body.typeOfUser,
+        //typeOfUser: req.body.typeOfUser,
         typeOfOperation: req.body.typeOfOperation,
         nameOfOperation: req.body.nameOfOperation
     })
@@ -164,7 +220,7 @@ function userCreation(req, res){
                 //console.log(data);
             }
         });
-    }else{
+    }else if(req.body.typeOfUser == 'Mechant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
         serviceInitUserCreation(req, function(data, err) {
             if (err) {
                 res.status(500).send({ message: err });
@@ -173,6 +229,15 @@ function userCreation(req, res){
                 //console.log(data);
             }
         });
+    }else if (req.body.typeOfUser == 'Consumer') {
+      serviceInitUserCreation(req, function(data, err) {
+          if (err) {
+            res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user, token: data.token });
+              //console.log(data);
+          }
+      });
     }
 }
 
@@ -181,22 +246,24 @@ function serviceInitUserCreationRoot(req, next) {
     axios.post(url, {
         email: req.body.email,
         password: req.body.password,
+        surnameA: req.body.surnameA,
+        surnameB: req.body.surnameB,
+        nameOfUser: req.body.nameOfUser,
         typeOfUser: req.body.typeOfUser,
+        status: req.body.status,
+        creationDate: req.body.creationDate,
         initialToken: req.body.initialToken,
+        dp: req.body.dp,
+        addressU: req.body.addressU,
         typeOfOperation: req.body.typeOfOperation,
         nameOfOperation: req.body.nameOfOperation,
-        addressU: req.body.addressU,
-        nameOfUser: req.body.nameOfUser,
-        creationDate: req.body.creationDate,
-        status: req.body.status,
-        dp: req.body.dp,
-        hashX: req.body.hashX
-    }/*,
+        hashX: req.body.hashX,
+    },
     {
         headers: {
             'Authorization': req.headers.authorization
         }
-    }*/)
+    })
     .then(response => {
         //console.log(response.data);
         next(response.data, null);
@@ -211,23 +278,25 @@ function serviceInitUserCreationRoot(req, next) {
 function serviceInitUserCreation(req, next) {
     var url = 'http://'+host+':'+port.users+''+path.userCreation+'';
     axios.post(url, {
-        email: req.body.email,
-        password: req.body.password,
-        typeOfUser: req.body.typeOfUser,
-        initialToken: req.body.initialToken,
-        typeOfOperation: req.body.typeOfOperation,
-        nameOfOperation: req.body.nameOfOperation,
-        addressU: req.body.addressU,
-        nameOfUser: req.body.nameOfUser,
-        creationDate: req.body.creationDate,
-        status: req.body.status,
-        dp: req.body.dp,
-        hashX: req.body.hashX
+      email: req.body.email,
+      password: req.body.password,
+      surnameA: req.body.surnameA,
+      surnameB: req.body.surnameB,
+      nameOfUser: req.body.nameOfUser,
+      typeOfUser: req.body.typeOfUser,
+      status: req.body.status,
+      creationDate: req.body.creationDate,
+      initialToken: req.body.initialToken,
+      dp: req.body.dp,
+      addressU: req.body.addressU,
+      typeOfOperation: req.body.typeOfOperation,
+      nameOfOperation: req.body.nameOfOperation,
+      hashX: req.body.hashX,
     },
     {
-        headers: {
-            'Authorization': req.headers.authorization
-        }
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -296,19 +365,30 @@ function serviceInitUsersDetails(req, next) {
 }
 
 function userUpdate(req, res){
-    serviceInitUserUpdate(req, function(data, err) {
-        if (err) {
-            res.status(500).send({ message: err });
-        }else {
-            if(req.body.nameOfOperation == 'updateMe'){
+    var payload = decodeToken(req.headers.authorization);
+    if(payload.typeOfUser == 'Consumer'){
+        serviceInitUserUpdateConsumer(req, function(data, err) {
+            if (err) {
+                res.status(500).send({ message: err });
+            }else {
                 res.status(200).send({ message: data.message, token: data.token, user: data.user });
-
-            }else{
-                res.status(200).send({ message: data.message });
-                //console.log(data);
             }
-        }
-    });
+        });
+    }else{
+        serviceInitUserUpdate(req, function(data, err) {
+            if (err) {
+                res.status(500).send({ message: err });
+            }else {
+                if(req.body.nameOfOperation == 'updateMe'){
+                    res.status(200).send({ message: data.message, token: data.token, user: data.user });
+
+                }else{
+                    res.status(200).send({ message: data.message });
+                    //console.log(data);
+                }
+            }
+        });
+    }
 }
 
 function serviceInitUserUpdate(req, next) {
@@ -326,6 +406,33 @@ function serviceInitUserUpdate(req, next) {
         status: req.body.status,
         dp: req.body.dp,
         hashX: req.body.hashX
+    },
+    {
+        headers: {
+            'Authorization': req.headers.authorization
+        }
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function serviceInitUserUpdateConsumer(req, next) {
+    //console.log(req.body);
+    var url = 'http://'+host+':'+port.users+''+path.userUpdate+''+req.params.id;
+    axios.put(url, {
+        email: req.body.email,
+        password: req.body.password,
+        nameOfUser: req.body.nameOfUser,
+        typeOfOperation: req.body.typeOfOperation,
+        nameOfOperation: req.body.nameOfOperation,
+        surnameP: req.body.surnameP,
+        surnameM: req.body.surnameM,
     },
     {
         headers: {
@@ -375,17 +482,23 @@ function serviceInitUserDelete(req, next) {
     });
 }
 
-
+function decodeToken(token){
+    var secret = 'secret_key';
+    var payload = jwt.decode(token, secret);
+    return payload;
+}
 
 module.exports = {
-    login,
-    userCreation,
-    userDetails,
-    usersDetails,
-    userUpdate,
-    userDelete,
-    merchantsData,
-    carriersData,
-    acopiosData,
-    productorsData
+  getInitialToken,
+  getEmail,
+  login,
+  userCreation,
+  userDetails,
+  usersDetails,
+  userUpdate,
+  userDelete,
+  merchantsData,
+  carriersData,
+  acopiosData,
+  productorsData
 };
