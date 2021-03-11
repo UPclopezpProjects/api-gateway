@@ -4,8 +4,8 @@
   "description": "Microservicio 'Merchant'",
   "main": "index.js",
   "scripts": {
-    "start": "node ./bin/www",
-    "starts": "nodemon index.js",
+    "starts": "node ./bin/www",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Osman Alonso",

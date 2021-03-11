@@ -20,5 +20,5 @@ COPY ["package.json", "package-lock.json*", "./"]
 RUN npm install
 RUN npm update
 COPY . .
-EXPOSE 5000
+EXPOSE 80
 CMD ./how2Start

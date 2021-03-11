@@ -2,7 +2,7 @@
 
 var mongoose = require('mongoose');
 var app = require('./app');
-var port = process.env.PORT || 5000;
+var port = process.env.PORT || 80;
 var mongoDB = 'mongodb://172.17.0.1:27017/api-gateway';
 
 
