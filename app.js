@@ -11,7 +11,7 @@ global.port = {
 };
 global.path = {
   audit: '/exec/createUserSC',
-  getInitialToken: '/getInitialToken',
+  getInitialNonce: '/getInitialNonce',
   getEmail: '/getEmail/',
   userLogin: '/login',
   userCreation: '/userCreation',
@@ -29,6 +29,7 @@ global.path = {
 var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
+var session = require('express-session');
 
 //New
 var logger = require('morgan');
@@ -47,6 +48,15 @@ app.use(bodyParser.json());
 //New
 app.use(logger('dev'));
 //New
+
+app.use(session({
+  secret: 'foo',
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    expires: 600000
+  }
+}));
 
 //Configurar cabeceras HTTP y cors
 app.use(cors());

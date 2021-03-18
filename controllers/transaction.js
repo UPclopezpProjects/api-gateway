@@ -126,32 +126,36 @@ function serviceInitProductors(req, next) {
     });
 }
 
-function getInitialToken(req, res){
-    serviceIniGetToken(req, function(data, err) {
-        if (err) {
-            res.status(500).send({ message: err });
-        }else {
-          if(data.token){
-                res.status(200).send({ message: data.message, token: data.token });
-                //console.log(data);
-          }else {
-            res.status(200).send({ message: data.message });
-          }
-        }
-    });
+function getInitialNonce(req, res){
+  serviceInitGetNonce(req, function(data, err) {
+    if (err) {
+      res.status(500).send({ message: err });
+    }else {
+      if (data.message) {
+        res.status(200).send({ message: data.message });
+
+      }else {
+        res.status(200).send({ session: data.session, token: data.token });
+      }
+    }
+  });
 }
 
-function serviceIniGetToken(req, next) {
-    var url = 'http://'+host+':'+port.users+''+path.getInitialToken;
-    axios.get(url)
-    .then(response => {
-        //console.log(response.data);
-        next(response.data, null);
-    })
-    .catch(error => {
-        //console.log(error);
-        next(null, error.response.data.message);
-    });
+function serviceInitGetNonce(req, next) {
+  var url = 'http://'+host+':'+port.users+''+path.getInitialNonce;
+  axios.post(url, {
+    //na: req.body.na, se comenta mientras se hacen las pruenas sin un cliente que pueda usar estos datos
+    na: 123,
+    session: req.session.id
+  })
+  .then(response => {
+    //console.log(response.data);
+    next(response.data, null);
+  })
+  .catch(error => {
+    console.log(error);
+    next(null, error.response.data.message);
+  });
 }
 
 function getEmail(req, res){
@@ -211,7 +215,7 @@ function serviceInitLogin(req, next) {
 }
 
 function userCreation(req, res){
-    if(req.body.typeOfUser == 'Root'){
+    if(req.body.typeOfUser == 'Root' || req.body.typeOfUser == 'Consumer'){
         serviceInitUserCreationRoot(req, function(data, err) {
             if (err) {
                 res.status(500).send({ message: err });
@@ -229,15 +233,6 @@ function userCreation(req, res){
                 //console.log(data);
             }
         });
-    }else if (req.body.typeOfUser == 'Consumer') {
-      serviceInitUserCreation(req, function(data, err) {
-          if (err) {
-            res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ message: data.message, user: data.user, token: data.token });
-              //console.log(data);
-          }
-      });
     }
 }
 
@@ -261,7 +256,8 @@ function serviceInitUserCreationRoot(req, next) {
     },
     {
         headers: {
-            'Authorization': req.headers.authorization
+            'Authorization': req.headers.authorization,
+            'Session': req.headers.session
         }
     })
     .then(response => {
@@ -489,7 +485,7 @@ function decodeToken(token){
 }
 
 module.exports = {
-  getInitialToken,
+  getInitialNonce,
   getEmail,
   login,
   userCreation,

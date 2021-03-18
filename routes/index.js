@@ -5,7 +5,7 @@ var TransactionController = require('../controllers/transaction');
 var router = express.Router();
 
 router.post('/login', TransactionController.login);
-router.get('/getInitialToken', TransactionController.getInitialToken);
+router.get('/getInitialNonce', TransactionController.getInitialNonce);
 router.get('/getEmail', TransactionController.getEmail);
 router.post('/userCreation', TransactionController.userCreation);
 router.get('/userDetails/:id', TransactionController.userDetails);
