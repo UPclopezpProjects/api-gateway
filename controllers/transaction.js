@@ -131,11 +131,10 @@ function getInitialNonce(req, res){
     if (err) {
       res.status(500).send({ message: err });
     }else {
-      if (data.message) {
-        res.status(200).send({ message: data.message });
-
+      if (data.res == false) {
+        res.status(200).send({ res: data.res, A: data.A, na: data.na });
       }else {
-        res.status(200).send({ session: data.session, token: data.token });
+        res.status(200).send({ A: data.A, na: data.na, nb: data.nb });
       }
     }
   });
@@ -153,7 +152,7 @@ function serviceInitGetNonce(req, next) {
     next(response.data, null);
   })
   .catch(error => {
-    console.log(error);
+    //console.log(error);
     next(null, error.response.data.message);
   });
 }
@@ -215,10 +214,11 @@ function serviceInitLogin(req, next) {
 }
 
 function userCreation(req, res){
-    if(req.body.typeOfUser == 'Root' || req.body.typeOfUser == 'Consumer'){
+    if(req.body.typeOfUser == 'Root'){
         serviceInitUserCreationRoot(req, function(data, err) {
             if (err) {
-                res.status(500).send({ message: err });
+              console.log(err);
+              res.status(500).send({ message: err });
             }else {
                 res.status(200).send({ message: data.message, user: data.user, token: data.token });
                 //console.log(data);
@@ -233,6 +233,16 @@ function userCreation(req, res){
                 //console.log(data);
             }
         });
+    }else if(req.body.typeOfUser == 'Consumer'){
+      serviceInitUserCreationConsumer(req, function(data, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user, token: data.token });
+            //res.status(200).send({ message: data.message });
+            //console.log(data);
+          }
+      });
     }
 }
 
@@ -299,6 +309,35 @@ function serviceInitUserCreation(req, next) {
         next(response.data, null);
     })
     .catch(error => {
+        //console.log(error.response.data.message);
+        next(null, error.response.data.message);
+    });
+}
+
+function serviceInitUserCreationConsumer(req, next) {
+    var url = 'http://'+host+':'+port.users+''+path.userCreation+'';
+    axios.post(url, {
+        email: req.body.email,
+        password: req.body.password,
+        surnameA: req.body.surnameA,
+        surnameB: req.body.surnameB,
+        nameOfUser: req.body.nameOfUser,
+        typeOfUser: req.body.typeOfUser,
+        status: req.body.status,
+        creationDate: req.body.creationDate,
+        initialToken: req.body.initialToken,
+        //dp: req.body.dp,
+        addressU: req.body.addressU,
+        typeOfOperation: req.body.typeOfOperation,
+        nameOfOperation: req.body.nameOfOperation,
+        hashX: req.body.hashX,
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
         //console.log(error.response.data.message);
         next(null, error.response.data.message);
     });
