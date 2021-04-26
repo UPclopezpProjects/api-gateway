@@ -30,6 +30,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var session = require('express-session');
+var multer = require('multer');
+var path = require('path');
+var uuid = require('uuid');
 
 //New
 var logger = require('morgan');
@@ -38,11 +41,36 @@ var logger = require('morgan');
 
 var app = express();
 
+var storage = multer.diskStorage({
+  destination: path.join(__dirname, 'public/uploads'),
+  filename: (req, file, cb) => {
+    cb(null, uuid.v4() + path.extname(file.originalname).toLowerCase());
+  }
+});
+
+app.use(multer({
+  storage,
+  dest: path.join(__dirname, 'public/uploads'),
+  limits: {filseSize: 1000000},
+  fileFilter: function (req, file, cb) {
+    var filetypes = /jpeg|jpg|png|gif/;
+    var mimetype = filetypes.test(file.mimetype);
+    var extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    if (mimetype && extname) {
+      return cb(null, true);
+    }
+    cb("Error: File upload only supports the following filetypes - " + filetypes);
+  }
+}).single('image'));
+
+// Static files
+app.use(express.static(path.join(__dirname, 'public')));
+
 //Cargar rutas
 //var user_routes = require('./routes/user');
 var api_gateway_routes = require('./routes/index');
 
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 
 //New

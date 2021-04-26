@@ -1,13 +1,37 @@
 var axios = require('axios');
 var jwt = require('jwt-simple');
 
+async function getData(req, res) {
+  var data = [];
+  try {
+    //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});
+    const resMerchant = await axios.get('http://host.docker.internal:3002/getData');
+    //data.push(resMerchant.data.message);
 
+    const resCarrier = await axios.get('http://host.docker.internal:3003/getData');
+    //data.push(resCarrier.data.message);
+
+    const resAcopio = await axios.get('http://host.docker.internal:3004/getData');
+    //data.push(resAcopio.data.message);
+
+    const resProductor = await axios.get('http://host.docker.internal:3005/getData');
+    //data.push(resProductor.data.message);
+
+    res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message });
+  } catch (error) {
+    //console.log(error);
+    console.log(error);
+    res.status(200).send({ message: error });
+
+  }
+
+}
 function merchantsData(req, res){
     serviceInitMerchants(req, function(data, err) {
         if (err) {
             res.status(500).send({ message: err });
         }else {
-            res.status(200).send({ message: data.message });
+          res.status(200).send({ message: data.message, addData: data.addData });
             //console.log(data);
         }
     });
@@ -16,12 +40,12 @@ function merchantsData(req, res){
 function serviceInitMerchants(req, next) {
     var url = 'http://'+host+':'+port.merchant+''+path.merchant+'';
     axios.post(url, {
-        map: req.body.map,
-        id: req.body.id,
-        fId: req.body.fId,
-        date: req.body.date,
-        description: req.body.description,
-        type: req.body.type
+        fid: req.body.fid,
+        code: req.body.code,
+        ubication: req.body.ubication,
+        name: req.body.name,
+        previousStage: req.body.previousStage,
+        currentStage: req.body.currentStage
     })
     .then(response => {
         //console.log(response.data);
@@ -38,7 +62,7 @@ function carriersData(req, res){
         if (err) {
             res.status(500).send({ message: err });
         }else {
-            res.status(200).send({ message: data.message });
+          res.status(200).send({ message: data.message, addData: data.addData });
             //console.log(data);
         }
     });
@@ -47,12 +71,11 @@ function carriersData(req, res){
 function serviceInitCarriers(req, next) {
     var url = 'http://'+host+':'+port.carrier+''+path.carrier+'';
     axios.post(url, {
-        map: req.body.map,
-        id: req.body.id,
-        fId: req.body.fId,
-        date: req.body.date,
-        description: req.body.description,
-        type: req.body.type
+      fid: req.body.fid,
+      ubication: req.body.ubication,
+      name: req.body.name,
+      previousStage: req.body.previousStage,
+      currentStage: req.body.currentStage
     })
     .then(response => {
         //console.log(response.data);
@@ -69,7 +92,7 @@ function acopiosData(req, res){
         if (err) {
             res.status(500).send({ message: err });
         }else {
-            res.status(200).send({ message: data.message });
+          res.status(200).send({ message: data.message, addData: data.addData });
             //console.log(data);
         }
     });
@@ -78,12 +101,11 @@ function acopiosData(req, res){
 function serviceInitAcopios(req, next) {
     var url = 'http://'+host+':'+port.acopio+''+path.acopio+'';
     axios.post(url, {
-        map: req.body.map,
-        id: req.body.id,
-        fId: req.body.fId,
-        date: req.body.date,
-        description: req.body.description,
-        type: req.body.type
+      fid: req.body.fid,
+      ubication: req.body.ubication,
+      name: req.body.name,
+      previousStage: req.body.previousStage,
+      currentStage: req.body.currentStage
     })
     .then(response => {
         //console.log(response.data);
@@ -96,11 +118,12 @@ function serviceInitAcopios(req, next) {
 }
 
 function productorsData(req, res){
+  console.log(req.body);
     serviceInitProductors(req, function(data, err) {
         if (err) {
             res.status(500).send({ message: err });
         }else {
-            res.status(200).send({ message: data.message });
+          res.status(200).send({ message: data.message, addData: data.addData });
             //console.log(data);
         }
     });
@@ -109,12 +132,16 @@ function productorsData(req, res){
 function serviceInitProductors(req, next) {
     var url = 'http://'+host+':'+port.productor+''+path.productor+'';
     axios.post(url, {
-        map: req.body.map,
-        id: req.body.id,
-        fId: req.body.fId,
-        date: req.body.date,
-        description: req.body.description,
-        type: req.body.type
+      fid: req.body.fid,
+      ubication: req.body.ubication,
+      name: req.body.name,
+      harvestDate: req.body.harvestDate,
+      caducationDate: req.body.caducationDate,
+      previousStage: req.body.previousStage,
+      currentStage: req.body.currentStage,
+      description: req.body.description,
+      image: req.body.image,
+      documentation: req.body.documentation
     })
     .then(response => {
         //console.log(response.data);
@@ -127,6 +154,7 @@ function serviceInitProductors(req, next) {
 }
 
 function getInitialNonce(req, res){
+  console.log(req.body);
   serviceInitGetNonce(req, function(data, err) {
     if (err) {
       res.status(500).send({ message: err });
@@ -143,8 +171,7 @@ function getInitialNonce(req, res){
 function serviceInitGetNonce(req, next) {
   var url = 'http://'+host+':'+port.users+''+path.getInitialNonce;
   axios.post(url, {
-    //na: req.body.na, se comenta mientras se hacen las pruenas sin un cliente que pueda usar estos datos
-    na: 123,
+    na: req.body.na, //se comenta mientras se hacen las pruenas sin un cliente que pueda usar estos datos
     session: req.session.id
   })
   .then(response => {
@@ -224,7 +251,7 @@ function userCreation(req, res){
                 //console.log(data);
             }
         });
-    }else if(req.body.typeOfUser == 'Mechant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
+    }else if(req.body.typeOfUser == 'Merchant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
         serviceInitUserCreation(req, function(data, err) {
             if (err) {
                 res.status(500).send({ message: err });
@@ -524,6 +551,7 @@ function decodeToken(token){
 }
 
 module.exports = {
+  getData,
   getInitialNonce,
   getEmail,
   login,

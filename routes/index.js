@@ -4,8 +4,9 @@ var express = require('express');
 var TransactionController = require('../controllers/transaction');
 var router = express.Router();
 
+router.get('/getData', TransactionController.getData);
 router.post('/login', TransactionController.login);
-router.get('/getInitialNonce', TransactionController.getInitialNonce);
+router.post('/getInitialNonce', TransactionController.getInitialNonce);
 router.get('/getEmail', TransactionController.getEmail);
 router.post('/userCreation', TransactionController.userCreation);
 router.get('/userDetails/:id', TransactionController.userDetails);
@@ -16,7 +17,7 @@ router.delete('/userDelete/:id', TransactionController.userDelete);
 router.post('/merchantsData', TransactionController.merchantsData);
 router.post('/carriersData', TransactionController.carriersData);
 router.post('/acopiosData', TransactionController.acopiosData);
-router.post('/productosData', TransactionController.productorsData);
+router.post('/productorsData', TransactionController.productorsData);
 
 //router.get('/');
 
