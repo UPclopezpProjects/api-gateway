@@ -1,6 +1,33 @@
 var axios = require('axios');
 var jwt = require('jwt-simple');
 
+function traceability(req, res) {
+  serviceInitTraceability(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitTraceability(req, next) {
+    var url = 'http://'+host.traceability+':'+port.traceability+''+path.traceability+'';
+    axios.post(url, {
+        QR: req.body.QR,
+        ID: req.body.ID
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
 async function getData(req, res) {
   try {
     //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});  productor: '/productorsData',
@@ -300,7 +327,7 @@ function serviceInitUserCreationRoot(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        //console.log(error);
+        console.log(error);
         //console.log(error.response.data.message);
         next(null, error.response.data.message);
     });
@@ -542,6 +569,59 @@ function serviceInitUserDelete(req, next) {
     });
 }
 
+function emailToReset(req, res) {
+  serviceInitEmailToReset(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+          res.status(200).send({ message: data.message });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitEmailToReset(req, next) {
+    var url = 'http://'+host.users+':'+port.users+''+path.emailToReset+'';
+    axios.post(url, {
+        email: req.body.email,
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function resetPassword(req, res) {
+  serviceInitResetPassword(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+          res.status(200).send({ message: data.message });
+          //console.log(data);
+      }
+  });
+}
+
+
+function serviceInitResetPassword(req, next) {
+  var url = 'http://'+host.users+':'+port.users+''+path.resetPassword+'?code='+req.query.code+'&email='+req.query.email+'';
+    axios.put(url, {
+        password: req.body.password,
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
 function decodeToken(token){
     var secret = 'secret_key';
     var payload = jwt.decode(token, secret);
@@ -549,6 +629,7 @@ function decodeToken(token){
 }
 
 module.exports = {
+  traceability,
   getData,
   getInitialNonce,
   getEmail,
@@ -558,6 +639,8 @@ module.exports = {
   usersDetails,
   userUpdate,
   userDelete,
+  emailToReset,
+  resetPassword,
   merchantsData,
   carriersData,
   acopiosData,

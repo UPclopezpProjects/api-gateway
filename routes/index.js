@@ -13,11 +13,16 @@ router.get('/userDetails/:id', TransactionController.userDetails);
 router.get('/usersDetails/:page?', TransactionController.usersDetails);
 router.put('/userUpdate/:id', TransactionController.userUpdate);
 router.delete('/userDelete/:id', TransactionController.userDelete);
+router.post('/emailToReset', TransactionController.emailToReset);
+router.put('/resetPassword', TransactionController.resetPassword);
 
 router.post('/merchantsData', TransactionController.merchantsData);
 router.post('/carriersData', TransactionController.carriersData);
 router.post('/acopiosData', TransactionController.acopiosData);
 router.post('/productorsData', TransactionController.productorsData);
+router.post('/traceability', TransactionController.traceability);
+
+
 
 //router.get('/');
 
