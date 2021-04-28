@@ -2,19 +2,18 @@ var axios = require('axios');
 var jwt = require('jwt-simple');
 
 async function getData(req, res) {
-  var data = [];
   try {
-    //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});
-    const resMerchant = await axios.get('http://host.docker.internal:3002/getData');
+    //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});  productor: '/productorsData',
+    const resMerchant = await axios.get('http://'+host.merchant+':'+port.merchant+''+path.getData+'');
     //data.push(resMerchant.data.message);
 
-    const resCarrier = await axios.get('http://host.docker.internal:3003/getData');
+    const resCarrier = await axios.get('http://'+host.carrier+':'+port.carrier+''+path.getData+'');
     //data.push(resCarrier.data.message);
 
-    const resAcopio = await axios.get('http://host.docker.internal:3004/getData');
+    const resAcopio = await axios.get('http://'+host.acopio+':'+port.acopio+''+path.getData+'');
     //data.push(resAcopio.data.message);
 
-    const resProductor = await axios.get('http://host.docker.internal:3005/getData');
+    const resProductor = await axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
     //data.push(resProductor.data.message);
 
     res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message });
@@ -22,10 +21,9 @@ async function getData(req, res) {
     //console.log(error);
     console.log(error);
     res.status(200).send({ message: error });
-
   }
-
 }
+
 function merchantsData(req, res){
     serviceInitMerchants(req, function(data, err) {
         if (err) {
@@ -38,7 +36,7 @@ function merchantsData(req, res){
 }
 
 function serviceInitMerchants(req, next) {
-    var url = 'http://'+host+':'+port.merchant+''+path.merchant+'';
+    var url = 'http://'+host.merchant+':'+port.merchant+''+path.merchant+'';
     axios.post(url, {
         fid: req.body.fid,
         code: req.body.code,
@@ -69,7 +67,7 @@ function carriersData(req, res){
 }
 
 function serviceInitCarriers(req, next) {
-    var url = 'http://'+host+':'+port.carrier+''+path.carrier+'';
+    var url = 'http://'+host.carrier+':'+port.carrier+''+path.carrier+'';
     axios.post(url, {
       fid: req.body.fid,
       ubication: req.body.ubication,
@@ -99,7 +97,7 @@ function acopiosData(req, res){
 }
 
 function serviceInitAcopios(req, next) {
-    var url = 'http://'+host+':'+port.acopio+''+path.acopio+'';
+    var url = 'http://'+host.acopio+':'+port.acopio+''+path.acopio+'';
     axios.post(url, {
       fid: req.body.fid,
       ubication: req.body.ubication,
@@ -130,7 +128,7 @@ function productorsData(req, res){
 }
 
 function serviceInitProductors(req, next) {
-    var url = 'http://'+host+':'+port.productor+''+path.productor+'';
+    var url = 'http://'+host.productor+':'+port.productor+''+path.productor+'';
     axios.post(url, {
       fid: req.body.fid,
       ubication: req.body.ubication,
@@ -169,7 +167,7 @@ function getInitialNonce(req, res){
 }
 
 function serviceInitGetNonce(req, next) {
-  var url = 'http://'+host+':'+port.users+''+path.getInitialNonce;
+  var url = 'http://'+host.users+':'+port.users+''+path.getInitialNonce;
   axios.post(url, {
     na: req.body.na, //se comenta mientras se hacen las pruenas sin un cliente que pueda usar estos datos
     session: req.session.id
@@ -197,7 +195,7 @@ function getEmail(req, res){
 }
 
 function serviceInitGetEmail(req, next) {
-    var url = 'http://'+host+':'+port.users+''+path.getEmail+'?code='+req.query.code+'&email='+req.query.email+'';
+    var url = 'http://'+host.users+':'+port.users+''+path.getEmail+'?code='+req.query.code+'&email='+req.query.email+'';
     console.log(url);
     axios.get(url)
     .then(response => {
@@ -222,7 +220,7 @@ function login(req, res){
 }
 
 function serviceInitLogin(req, next) {
-    var url = 'http://'+host+':'+port.users+''+path.userLogin+'';
+    var url = 'http://'+host.users+':'+port.users+''+path.userLogin+'';
     axios.post(url, {
         email: req.body.email,
         password: req.body.password,
@@ -274,7 +272,7 @@ function userCreation(req, res){
 }
 
 function serviceInitUserCreationRoot(req, next) {
-    var url = 'http://'+host+':'+port.users+''+path.userCreation+'';
+    var url = 'http://'+host.users+':'+port.users+''+path.userCreation+'';
     axios.post(url, {
         email: req.body.email,
         password: req.body.password,
@@ -309,7 +307,7 @@ function serviceInitUserCreationRoot(req, next) {
 }
 
 function serviceInitUserCreation(req, next) {
-    var url = 'http://'+host+':'+port.users+''+path.userCreation+'';
+    var url = 'http://'+host.users+':'+port.users+''+path.userCreation+'';
     axios.post(url, {
       email: req.body.email,
       password: req.body.password,
@@ -342,7 +340,7 @@ function serviceInitUserCreation(req, next) {
 }
 
 function serviceInitUserCreationConsumer(req, next) {
-    var url = 'http://'+host+':'+port.users+''+path.userCreation+'';
+    var url = 'http://'+host.users+':'+port.users+''+path.userCreation+'';
     axios.post(url, {
         email: req.body.email,
         password: req.body.password,
@@ -383,7 +381,7 @@ function userDetails(req, res){
 }
 
 function serviceInitUserDetails(req, next) {
-    var url = 'http://'+host+':'+port.users+''+path.userDetails+''+req.params.id;
+    var url = 'http://'+host.users+':'+port.users+''+path.userDetails+''+req.params.id;
     axios.get(url, {
         headers: {
             'Authorization': req.headers.authorization
@@ -410,7 +408,7 @@ function usersDetails(req, res){
 }
 
 function serviceInitUsersDetails(req, next) {
-    var url = 'http://'+host+':'+port.users+''+path.usersDetails+''+req.params.page;
+    var url = 'http://'+host.users+':'+port.users+''+path.usersDetails+''+req.params.page;
     axios.get(url, {
         headers: {
             'Authorization': req.headers.authorization
@@ -455,7 +453,7 @@ function userUpdate(req, res){
 
 function serviceInitUserUpdate(req, next) {
     //console.log(req.body);
-    var url = 'http://'+host+':'+port.users+''+path.userUpdate+''+req.params.id;
+    var url = 'http://'+host.users+':'+port.users+''+path.userUpdate+''+req.params.id;
     axios.put(url, {
         email: req.body.email,
         password: req.body.password,
@@ -486,7 +484,7 @@ function serviceInitUserUpdate(req, next) {
 
 function serviceInitUserUpdateConsumer(req, next) {
     //console.log(req.body);
-    var url = 'http://'+host+':'+port.users+''+path.userUpdate+''+req.params.id;
+    var url = 'http://'+host.users+':'+port.users+''+path.userUpdate+''+req.params.id;
     axios.put(url, {
         email: req.body.email,
         password: req.body.password,
@@ -524,7 +522,7 @@ function userDelete(req, res){
 
 function serviceInitUserDelete(req, next) {
     //console.log(req.headers.authorization);
-    var url = 'http://'+host+':'+port.users+''+path.userDelete+''+req.params.id;
+    var url = 'http://'+host.users+':'+port.users+''+path.userDelete+''+req.params.id;
     axios.delete(url, {
         headers: {
             'Authorization': req.headers.authorization

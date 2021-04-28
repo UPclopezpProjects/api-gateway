@@ -1,13 +1,23 @@
 'use stric'
 //
-global.host = 'host.docker.internal'; //host.docker.internal
+//global.host = 'host.docker.internal'; //host.docker.internal
+global.host = {
+  audit: '172.18.1.4',
+  users: '172.18.1.5',
+  merchant: '172.18.1.6',
+  carrier: '172.18.1.7',
+  acopio: '172.18.1.8',
+  productor: '172.18.1.9',
+  traceability: '172.18.1.10'
+};
 global.port = {
   audit: '3000',
   users: '3001',
   merchant: '3002',
   carrier: '3003',
   acopio: '3004',
-  productor: '3005'
+  productor: '3005',
+  traceability: '3006'
 };
 global.path = {
   audit: '/exec/createUserSC',
@@ -23,7 +33,9 @@ global.path = {
   merchant: '/merchantsData',
   carrier: '/carriersData',
   acopio: '/acopiosData',
-  productor: '/productorsData'
+  productor: '/productorsData',
+  getData: '/getData',
+  traceability: '/traceability'
 };
 //
 var express = require('express');
@@ -40,6 +52,12 @@ var logger = require('morgan');
 
 
 var app = express();
+
+app.set('trust proxy', true);
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 var storage = multer.diskStorage({
   destination: path.join(__dirname, 'public/uploads'),
@@ -99,5 +117,23 @@ app.use((req, res, next) => {
 //Carga de rutas base
 //app.use('/api', user_routes);
 app.use('/', api_gateway_routes);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
+});
+
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  var resp = {message:"error de users - :C | "+err};
+  res.send(resp);
+  //res.render('error');
+});
 
 module.exports = app;
