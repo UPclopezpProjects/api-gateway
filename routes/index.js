@@ -4,6 +4,9 @@ var express = require('express');
 var TransactionController = require('../controllers/transaction');
 var router = express.Router();
 
+router.get('/images', TransactionController.getFileStream);
+router.get('/images/:id', TransactionController.getFileStream);
+
 router.get('/getData', TransactionController.getData);
 router.post('/login', TransactionController.login);
 router.post('/getInitialNonce', TransactionController.getInitialNonce);
@@ -17,12 +20,18 @@ router.post('/emailToReset', TransactionController.emailToReset);
 router.put('/resetPassword', TransactionController.resetPassword);
 
 router.post('/merchantsData', TransactionController.merchantsData);
+router.post('/getCompanyM', TransactionController.getCompanyM);
+router.post('/merchantsCompany', TransactionController.merchantsCompany);
+router.post('/getCompanyC', TransactionController.getCompanyC);
 router.post('/carriersData', TransactionController.carriersData);
+router.post('/carriersCompany', TransactionController.carriersCompany);
+router.post('/getCompanyA', TransactionController.getCompanyA);
 router.post('/acopiosData', TransactionController.acopiosData);
+router.post('/acopiosCompany', TransactionController.acopiosCompany);
+router.post('/getCompanyP', TransactionController.getCompanyP);
 router.post('/productorsData', TransactionController.productorsData);
+router.post('/productorsCompany', TransactionController.productorsCompany);
 router.post('/traceability', TransactionController.traceability);
-
-
 
 //router.get('/');
 

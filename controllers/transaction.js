@@ -1,12 +1,25 @@
+'use strict'
+require('dotenv/config');
+const AWS = require('aws-sdk');
+var multer = require('multer');
+var uuid = require('uuid');
+
 var axios = require('axios');
 var jwt = require('jwt-simple');
+
+const s3 = new AWS.S3({
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    },
+});
 
 function traceability(req, res) {
   serviceInitTraceability(req, function(data, err) {
       if (err) {
           res.status(500).send({ message: err });
       }else {
-        res.status(200).send({ message: data.message });
+        res.status(200).send({ message: data.message, names: data.names });
           //console.log(data);
       }
   });
@@ -51,15 +64,118 @@ async function getData(req, res) {
   }
 }
 
-function merchantsData(req, res){
-    serviceInitMerchants(req, function(data, err) {
-        if (err) {
-            res.status(500).send({ message: err });
-        }else {
-          res.status(200).send({ message: data.message, addData: data.addData });
-            //console.log(data);
-        }
+function uploadImages(req, next) {
+  let myFile = req.file.originalname.split(".");
+  const fileType = myFile[myFile.length - 1];
+  const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: `${uuid.v4()}.${fileType}`,
+      Body: req.file.buffer
+  };
+  s3.upload(params, (error, dataAWS) => {
+    if(error){
+      next(null, error);
+      //res.status(500).send(error);
+    }else {
+      next(dataAWS.Key, null);
+    }
+  });
+}
+
+function getFileStream(req, res) {
+  const params = {
+    Key: req.query.id,
+    Bucket: process.env.AWS_BUCKET_NAME
+  };
+  //Convert image to base64
+  /*s3.getObject(params, (err, rest) => {
+    if (err) throw err;
+
+    const b64 = Buffer.from(rest.Body).toString('base64');
+    // CHANGE THIS IF THE IMAGE YOU ARE WORKING WITH IS .jpg OR WHATEVER
+    const mimeType = 'image/png'; // e.g., image/png
+
+    res.send(`<img src="data: ${mimeType}; base64, ${b64}" />`);
+    //res.send(`<img src="${b64}" />`);
+  });*/
+  s3.getObject(params)
+  .createReadStream()
+  .on('error', function(err) {
+    //console.log(err);
+    res.status(500).send({ message: err.message });
+  })
+  .pipe(res);
+}
+
+function merchantsCompany(req, res) {
+  serviceInitMerchantsCompany(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitMerchantsCompany(req, next) {
+    var url = 'http://'+host.merchant+':'+port.merchant+''+path.merchantsCompany+'';
+    axios.post(url, {
+        email: req.body.email,
+        nameOfCompany: req.body.nameOfCompany
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
     });
+}
+
+function getCompanyM(req, res) {
+  serviceInitGetCompanyM(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitGetCompanyM(req, next) {
+    var url = 'http://'+host.merchant+':'+port.merchant+''+path.getCompanyM+'';
+    axios.post(url, {
+        email: req.body.email
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function merchantsData(req, res){
+  uploadImages(req, function(imageName, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        req.body.image = imageName;
+        serviceInitMerchants(req, function(data, err) {
+            if (err) {
+                res.status(500).send({ message: err });
+            }else {
+              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                //console.log(data);
+            }
+        });
+      }
+  });
 }
 
 function serviceInitMerchants(req, next) {
@@ -70,7 +186,62 @@ function serviceInitMerchants(req, next) {
         ubication: req.body.ubication,
         name: req.body.name,
         previousStage: req.body.previousStage,
-        currentStage: req.body.currentStage
+        currentStage: req.body.currentStage,
+        nameOfCompany: req.body.nameOfCompany,
+        image: req.body.image
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function carriersCompany(req, res) {
+  serviceInitCarriersCompany(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitCarriersCompany(req, next) {
+    var url = 'http://'+host.carrier+':'+port.carrier+''+path.carriersCompany+'';
+    axios.post(url, {
+        email: req.body.email,
+        nameOfCompany: req.body.nameOfCompany
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function getCompanyC(req, res) {
+  serviceInitGetCompanyC(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitGetCompanyC(req, next) {
+    var url = 'http://'+host.carrier+':'+port.carrier+''+path.getCompanyC+'';
+    axios.post(url, {
+        email: req.body.email
     })
     .then(response => {
         //console.log(response.data);
@@ -83,14 +254,21 @@ function serviceInitMerchants(req, next) {
 }
 
 function carriersData(req, res){
-    serviceInitCarriers(req, function(data, err) {
-        if (err) {
-            res.status(500).send({ message: err });
-        }else {
-          res.status(200).send({ message: data.message, addData: data.addData });
-            //console.log(data);
-        }
-    });
+  uploadImages(req, function(imageName, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        req.body.image = imageName;
+        serviceInitCarriers(req, function(data, err) {
+            if (err) {
+                res.status(500).send({ message: err });
+            }else {
+              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                //console.log(data);
+            }
+        });
+      }
+  });
 }
 
 function serviceInitCarriers(req, next) {
@@ -100,7 +278,62 @@ function serviceInitCarriers(req, next) {
       ubication: req.body.ubication,
       name: req.body.name,
       previousStage: req.body.previousStage,
-      currentStage: req.body.currentStage
+      currentStage: req.body.currentStage,
+      nameOfCompany: req.body.nameOfCompany,
+      image: req.body.image
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function acopiosCompany(req, res) {
+  serviceInitAcopiosCompany(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitAcopiosCompany(req, next) {
+    var url = 'http://'+host.acopio+':'+port.acopio+''+path.acopiosCompany+'';
+    axios.post(url, {
+        email: req.body.email,
+        nameOfCompany: req.body.nameOfCompany
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function getCompanyA(req, res) {
+  serviceInitGetCompanyA(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitGetCompanyA(req, next) {
+    var url = 'http://'+host.acopio+':'+port.acopio+''+path.getCompanyA+'';
+    axios.post(url, {
+        email: req.body.email
     })
     .then(response => {
         //console.log(response.data);
@@ -113,14 +346,21 @@ function serviceInitCarriers(req, next) {
 }
 
 function acopiosData(req, res){
-    serviceInitAcopios(req, function(data, err) {
-        if (err) {
-            res.status(500).send({ message: err });
-        }else {
-          res.status(200).send({ message: data.message, addData: data.addData });
-            //console.log(data);
-        }
-    });
+  uploadImages(req, function(imageName, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        req.body.image = imageName;
+        serviceInitAcopios(req, function(data, err) {
+            if (err) {
+                res.status(500).send({ message: err });
+            }else {
+              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                //console.log(data);
+            }
+        });
+      }
+  });
 }
 
 function serviceInitAcopios(req, next) {
@@ -130,7 +370,62 @@ function serviceInitAcopios(req, next) {
       ubication: req.body.ubication,
       name: req.body.name,
       previousStage: req.body.previousStage,
-      currentStage: req.body.currentStage
+      currentStage: req.body.currentStage,
+      nameOfCompany: req.body.nameOfCompany,
+      image: req.body.image
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function productorsCompany(req, res) {
+  serviceInitProductorsCompany(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitProductorsCompany(req, next) {
+    var url = 'http://'+host.productor+':'+port.productor+''+path.productorsCompany+'';
+    axios.post(url, {
+        email: req.body.email,
+        nameOfCompany: req.body.nameOfCompany
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function getCompanyP(req, res) {
+  serviceInitGetCompanyP(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitGetCompanyP(req, next) {
+    var url = 'http://'+host.productor+':'+port.productor+''+path.getCompanyP+'';
+    axios.post(url, {
+        email: req.body.email
     })
     .then(response => {
         //console.log(response.data);
@@ -143,15 +438,21 @@ function serviceInitAcopios(req, next) {
 }
 
 function productorsData(req, res){
-  console.log(req.body);
-    serviceInitProductors(req, function(data, err) {
-        if (err) {
-            res.status(500).send({ message: err });
-        }else {
-          res.status(200).send({ message: data.message, addData: data.addData });
-            //console.log(data);
-        }
-    });
+  uploadImages(req, function(imageName, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        req.body.image = imageName;
+        serviceInitProductors(req, function(data, err) {
+            if (err) {
+                res.status(500).send({ message: err });
+            }else {
+              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                //console.log(data);
+            }
+        });
+      }
+  });
 }
 
 function serviceInitProductors(req, next) {
@@ -166,7 +467,8 @@ function serviceInitProductors(req, next) {
       currentStage: req.body.currentStage,
       description: req.body.description,
       image: req.body.image,
-      documentation: req.body.documentation
+      documentation: req.body.documentation,
+      nameOfCompany: req.body.nameOfCompany,
     })
     .then(response => {
         //console.log(response.data);
@@ -631,6 +933,7 @@ function decodeToken(token){
 module.exports = {
   traceability,
   getData,
+  getFileStream,
   getInitialNonce,
   getEmail,
   login,
@@ -641,8 +944,16 @@ module.exports = {
   userDelete,
   emailToReset,
   resetPassword,
+  getCompanyM,
+  merchantsCompany,
   merchantsData,
+  getCompanyC,
+  carriersCompany,
   carriersData,
+  getCompanyA,
+  acopiosCompany,
   acopiosData,
+  getCompanyP,
+  productorsCompany,
   productorsData
 };
