@@ -900,12 +900,13 @@ function serviceInitEmailToReset(req, next) {
 
 function resetPassword(req, res) {
   serviceInitResetPassword(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-          res.status(200).send({ message: data.message });
-          //console.log(data);
-      }
+    if (err) {
+      res.status(500).send({ message: err });
+    }else {
+      res.render('reset');
+      //res.status(200).send({ message: data.message });
+      //console.log(data);
+    }
   });
 }
 
