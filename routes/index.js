@@ -17,7 +17,7 @@ router.get('/usersDetails/:page?', TransactionController.usersDetails);
 router.put('/userUpdate/:id', TransactionController.userUpdate);
 router.delete('/userDelete/:id', TransactionController.userDelete);
 router.post('/emailToReset', TransactionController.emailToReset);
-router.put('/resetPassword', TransactionController.resetPassword);
+router.get('/resetPassword', TransactionController.resetPassword);
 
 router.post('/merchantsData', TransactionController.merchantsData);
 router.post('/getCompanyM', TransactionController.getCompanyM);
