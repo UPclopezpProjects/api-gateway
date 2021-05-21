@@ -517,7 +517,8 @@ function getEmail(req, res){
             res.status(500).send({ message: err });
             //console.log(err);
         }else {
-            res.status(200).send({ message: data.message });
+            //res.status(200).send({ message: data.message });
+            res.render('confirmation');
             //console.log(data);
         }
     });
