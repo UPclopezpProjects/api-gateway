@@ -791,6 +791,8 @@ function serviceInitUserUpdate(req, next) {
         initialToken: req.body.initialToken,
         typeOfOperation: req.body.typeOfOperation,
         nameOfOperation: req.body.nameOfOperation,
+        surnameA: req.body.surnameA,
+        surnameB: req.body.surnameB,
         addressU: req.body.addressU,
         nameOfUser: req.body.nameOfUser,
         status: req.body.status,
@@ -821,8 +823,8 @@ function serviceInitUserUpdateConsumer(req, next) {
         nameOfUser: req.body.nameOfUser,
         typeOfOperation: req.body.typeOfOperation,
         nameOfOperation: req.body.nameOfOperation,
-        surnameP: req.body.surnameP,
-        surnameM: req.body.surnameM,
+        surnameA: req.body.surnameA,
+        surnameB: req.body.surnameB
     },
     {
         headers: {
@@ -900,7 +902,7 @@ function serviceInitEmailToReset(req, next) {
 
 function resetPassword(req, res) {
   res.render('reset');
-  
+
   serviceInitResetPassword(req, function(data, err) {
     if (err) {
       res.status(500).send({ message: err });
