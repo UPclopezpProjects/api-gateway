@@ -22,7 +22,7 @@ global.port = {
 global.path = {
   audit: '/exec/createUserSC',
   getInitialNonce: '/getInitialNonce',
-  getEmail: '/getEmail/',
+  verifyEmail: '/verifyEmail/',
   userLogin: '/login',
   userCreation: '/userCreation',
   userRegister: '/register',

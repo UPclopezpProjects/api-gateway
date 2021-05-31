@@ -188,7 +188,8 @@ function serviceInitMerchants(req, next) {
         previousStage: req.body.previousStage,
         currentStage: req.body.currentStage,
         nameOfCompany: req.body.nameOfCompany,
-        image: req.body.image
+        image: req.body.image,
+        description: req.body.description
     })
     .then(response => {
         //console.log(response.data);
@@ -280,7 +281,8 @@ function serviceInitCarriers(req, next) {
       previousStage: req.body.previousStage,
       currentStage: req.body.currentStage,
       nameOfCompany: req.body.nameOfCompany,
-      image: req.body.image
+      image: req.body.image,
+      description: req.body.description
     })
     .then(response => {
         //console.log(response.data);
@@ -372,7 +374,8 @@ function serviceInitAcopios(req, next) {
       previousStage: req.body.previousStage,
       currentStage: req.body.currentStage,
       nameOfCompany: req.body.nameOfCompany,
-      image: req.body.image
+      image: req.body.image,
+      description: req.body.description
     })
     .then(response => {
         //console.log(response.data);
@@ -471,11 +474,12 @@ function serviceInitProductors(req, next) {
       nameOfCompany: req.body.nameOfCompany,
     })
     .then(response => {
-        //console.log(response.data);
+        console.log(response.data);
         next(response.data, null);
     })
     .catch(error => {
-        //console.log(error);
+        console.log(error);
+        console.log(error.response.data.message);
         next(null, error.response.data.message);
     });
 }
@@ -511,14 +515,14 @@ function serviceInitGetNonce(req, next) {
   });
 }
 
-function getEmail(req, res){
-    serviceInitGetEmail(req, function(data, err) {
+function verifyEmail(req, res){
+  serviceInitGetEmail(req, function(data, err) {
         if (err) {
             res.status(500).send({ message: err });
             //console.log(err);
         }else {
             //res.status(200).send({ message: data.message });
-            res.render('confirmation');
+            res.render('confirmation', { message: data.message });
             //console.log(data);
         }
     });
@@ -876,8 +880,8 @@ function serviceInitUserDelete(req, next) {
 
 function emailToReset(req, res) {
   serviceInitEmailToReset(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
+    if (err) {
+      res.status(500).send({ message: err });
       }else {
           res.status(200).send({ message: data.message });
           //console.log(data);
@@ -886,10 +890,37 @@ function emailToReset(req, res) {
 }
 
 function serviceInitEmailToReset(req, next) {
-    var url = 'http://'+host.users+':'+port.users+''+path.emailToReset+'';
-    axios.post(url, {
-        email: req.body.email,
-    })
+  var url = 'http://'+host.users+':'+port.users+''+path.emailToReset+'';
+  axios.post(url, {
+    email: req.body.email,
+  })
+  .then(response => {
+    //console.log(response.data);
+    next(response.data, null);
+  })
+  .catch(error => {
+    //console.log(error);
+    next(null, error.response.data.message);
+  });
+}
+
+function resetPasswordGET(req, res) {
+  serviceInitResetPasswordGET(req, function(data, err) {
+    if (err) {
+      res.status(500).send({ message: err });
+    }else {
+      if(data.message == true){
+        res.render('reset', { code: req.query.code, email: req.query.email });
+      }else if(data.message == false){
+        res.render('404', { message: 'Esta petición no existe' });
+      }
+    }
+  });
+}
+
+function serviceInitResetPasswordGET(req, next) {
+  var url = 'http://'+host.users+':'+port.users+''+path.resetPassword+'?code='+req.query.code+'&email='+req.query.email+'';
+    axios.get(url)
     .then(response => {
         //console.log(response.data);
         next(response.data, null);
@@ -900,25 +931,23 @@ function serviceInitEmailToReset(req, next) {
     });
 }
 
-function resetPassword(req, res) {
-  res.render('reset');
-
-  serviceInitResetPassword(req, function(data, err) {
+function resetPasswordPUT(req, res) {
+  console.log(req.body);
+  serviceInitResetPasswordPUT(req, function(data, err) {
     if (err) {
       res.status(500).send({ message: err });
     }else {
-      res.render('reset');
-      //res.status(200).send({ message: data.message });
+      res.status(200).send({ message: data.message });
       //console.log(data);
     }
   });
 }
 
-
-function serviceInitResetPassword(req, next) {
+function serviceInitResetPasswordPUT(req, next) {
   var url = 'http://'+host.users+':'+port.users+''+path.resetPassword+'?code='+req.query.code+'&email='+req.query.email+'';
     axios.put(url, {
         password: req.body.password,
+        password_confirmation: req.body.password_confirmation
     })
     .then(response => {
         //console.log(response.data);
@@ -941,7 +970,7 @@ module.exports = {
   getData,
   getFileStream,
   getInitialNonce,
-  getEmail,
+  verifyEmail,
   login,
   userCreation,
   userDetails,
@@ -949,7 +978,9 @@ module.exports = {
   userUpdate,
   userDelete,
   emailToReset,
-  resetPassword,
+  //resetPassword,
+  resetPasswordGET,
+  resetPasswordPUT,
   getCompanyM,
   merchantsCompany,
   merchantsData,

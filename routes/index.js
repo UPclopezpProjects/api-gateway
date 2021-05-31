@@ -10,14 +10,15 @@ router.get('/images/:id', TransactionController.getFileStream);
 router.get('/getData', TransactionController.getData);
 router.post('/login', TransactionController.login);
 router.post('/getInitialNonce', TransactionController.getInitialNonce);
-router.get('/getEmail', TransactionController.getEmail);
+router.get('/verifyEmail', TransactionController.verifyEmail);
 router.post('/userCreation', TransactionController.userCreation);
 router.get('/userDetails/:id', TransactionController.userDetails);
 router.get('/usersDetails/:page?', TransactionController.usersDetails);
 router.put('/userUpdate/:id', TransactionController.userUpdate);
 router.delete('/userDelete/:id', TransactionController.userDelete);
 router.post('/emailToReset', TransactionController.emailToReset);
-router.get('/resetPassword', TransactionController.resetPassword);
+router.get('/resetPassword', TransactionController.resetPasswordGET);
+router.put('/resetPassword', TransactionController.resetPasswordPUT);
 
 router.post('/merchantsData', TransactionController.merchantsData);
 router.post('/getCompanyM', TransactionController.getCompanyM);
