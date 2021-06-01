@@ -78,7 +78,7 @@ script.
       e.preventDefault();
         $.ajax({
           type: 'put',
-          url: 'http://localhost:80/resetPassword?code=#{code}&email=#{email}',
+          url: 'http://52.202.214.13:80/resetPassword?code=#{code}&email=#{email}',
           data: {
             password: $('#password').val(),
             password_confirmation: $('#password_confirmation').val()
