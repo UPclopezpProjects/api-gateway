@@ -348,6 +348,8 @@ function serviceInitGetCompanyA(req, next) {
 }
 
 function acopiosData(req, res){
+  console.log(req.file);
+  console.log(req.body);
   uploadImages(req, function(imageName, err) {
       if (err) {
           res.status(500).send({ message: err });
@@ -517,19 +519,23 @@ function serviceInitGetNonce(req, next) {
 
 function verifyEmail(req, res){
   serviceInitGetEmail(req, function(data, err) {
-        if (err) {
-            res.status(500).send({ message: err });
-            //console.log(err);
-        }else {
-            //res.status(200).send({ message: data.message });
-            res.render('confirmation', { message: data.message });
-            //console.log(data);
-        }
-    });
+    if (err) {
+      res.status(500).send({ message: err });
+      //console.log(err);
+    }else {
+      //res.status(200).send({ message: data.message });
+      if (data.message == true) {
+        res.render('confirmation', { message: 'El correo ha sido confirmado' });
+      }else {
+        res.render('404', { message: data.message });
+      }
+      //console.log(data);
+    }
+  });
 }
 
 function serviceInitGetEmail(req, next) {
-    var url = 'http://'+host.users+':'+port.users+''+path.getEmail+'?code='+req.query.code+'&email='+req.query.email+'';
+    var url = 'http://'+host.users+':'+port.users+''+path.verifyEmail+'?code='+req.query.code+'&email='+req.query.email+'';
     console.log(url);
     axios.get(url)
     .then(response => {
@@ -588,8 +594,8 @@ function userCreation(req, res){
             if (err) {
                 res.status(500).send({ message: err });
             }else {
+              console.log(data);
                 res.status(200).send({ message: data.message });
-                //console.log(data);
             }
         });
     }else if(req.body.typeOfUser == 'Consumer'){
@@ -912,7 +918,7 @@ function resetPasswordGET(req, res) {
       if(data.message == true){
         res.render('reset', { code: req.query.code, email: req.query.email });
       }else if(data.message == false){
-        res.render('404', { message: 'Esta petición no existe' });
+        res.render('404', { message: 'La petición no existe' });
       }
     }
   });
