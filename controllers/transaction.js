@@ -549,14 +549,14 @@ function serviceInitGetEmail(req, next) {
 }
 
 function login(req, res){
-    serviceInitLogin(req, function(data, err) {
-        if (err) {
-            res.status(500).send({ message: err });
-        }else {
-            res.status(200).send({ message: data.message, token: data.token, user: data.user });
-            //console.log(data);
-        }
-    });
+  serviceInitLogin(req, function(data, err) {
+    if (err) {
+      res.status(500).send({ message: err });
+    }else {
+      res.status(200).send({ message: data.message, token: data.token, user: data.user });
+      //console.log(data);
+    }
+  });
 }
 
 function serviceInitLogin(req, next) {
