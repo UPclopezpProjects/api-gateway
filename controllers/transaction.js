@@ -597,26 +597,26 @@ function userCreation(req, res){
         //console.log(data);
       }
     });
-    }else if(req.body.typeOfUser == 'Administrator' || req.body.typeOfUser == 'Merchant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
-        serviceInitUserCreation(req, function(data, err) {
-            if (err) {
-                res.status(500).send({ message: err });
-            }else {
-              console.log(data);
-                res.status(200).send({ message: data.message });
-            }
-        });
-    }else if(req.body.typeOfUser == 'Consumer'){
-      serviceInitUserCreationConsumer(req, function(data, err) {
-          if (err) {
-              res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ message: data.message, user: data.user, token: data.token });
-            //res.status(200).send({ message: data.message });
-            //console.log(data);
-          }
-      });
-    }
+  }else if(req.body.typeOfUser == 'Administrator' || req.body.typeOfUser == 'Merchant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
+    serviceInitUserCreation(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        console.log(data);
+        res.status(200).send({ message: data.message });
+      }
+    });
+  }else if(req.body.typeOfUser == 'Consumer'){
+    serviceInitUserCreationConsumer(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user, token: data.token });
+        //res.status(200).send({ message: data.message });
+        //console.log(data);
+      }
+    });
+  }
 }
 
 function serviceInitUserCreationRoot(req, next) {
