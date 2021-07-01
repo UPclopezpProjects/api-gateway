@@ -487,15 +487,16 @@ function serviceInitProductors(req, next) {
 }
 
 function getInitialNonce(req, res){
-  console.log(req.body);
+  //console.log(req.body);
   serviceInitGetNonce(req, function(data, err) {
     if (err) {
       res.status(500).send({ message: err });
     }else {
-      if (data.res == false) {
-        res.status(200).send({ res: data.res, A: data.A, na: data.na });
+      //console.log(data);
+      if (data.message == 'deny') {
+        res.status(200).send({  message: data.message, A: data.A, NA: data.NA });
       }else {
-        res.status(200).send({ A: data.A, na: data.na, nb: data.nb });
+        res.status(200).send({ A: data.A, NA: data.NA, NB: data.NB });
       }
     }
   });
@@ -579,17 +580,24 @@ function serviceInitLogin(req, next) {
 }
 
 function userCreation(req, res){
-    if(req.body.typeOfUser == 'Root'){
-        serviceInitUserCreationRoot(req, function(data, err) {
-            if (err) {
-              console.log(err);
-              res.status(500).send({ message: err });
-            }else {
-                res.status(200).send({ message: data.message, user: data.user, token: data.token });
-                //console.log(data);
-            }
-        });
-    }else if(req.body.typeOfUser == 'Merchant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
+  if(req.body.typeOfUser == 'Root'){
+    serviceInitUserCreationRoot(req, function(data, err) {
+      if (err) {
+        //console.log(err);
+        res.status(500).send({ message: err });
+      }else {
+        if(data.user){
+          res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB, user: data.user, token: data.token });
+        }else if(data.sessionID){
+          res.status(200).send({ message: data.message, sessionID: data.sessionID, token: data.token});
+        }else {
+          res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB});
+        }
+        //res.status(200).send({ message: data.message, user: data.user, token: data.token });
+        //console.log(data);
+      }
+    });
+    }else if(req.body.typeOfUser == 'Administrator' || req.body.typeOfUser == 'Merchant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
         serviceInitUserCreation(req, function(data, err) {
             if (err) {
                 res.status(500).send({ message: err });
@@ -640,7 +648,7 @@ function serviceInitUserCreationRoot(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        console.log(error);
+        //console.log(error);
         //console.log(error.response.data.message);
         next(null, error.response.data.message);
     });
@@ -674,7 +682,7 @@ function serviceInitUserCreation(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        //console.log(error.response.data.message);
+        console.log(error);
         next(null, error.response.data.message);
     });
 }
