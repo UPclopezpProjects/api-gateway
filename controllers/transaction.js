@@ -620,7 +620,7 @@ function userCreation(req, res){
 }
 
 function serviceInitUserCreationRoot(req, next) {
-    var url = 'http://'+host.users+':'+port.users+''+path.userCreation+'';
+  var url = 'http://'+host.users+':'+port.users+''+path.userCreation+'';
     axios.post(url, {
         email: req.body.email,
         password: req.body.password,
