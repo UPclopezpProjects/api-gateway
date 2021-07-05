@@ -32,10 +32,11 @@ router.post('/acopiosCompany', TransactionController.acopiosCompany);
 router.post('/getCompanyP', TransactionController.getCompanyP);
 router.post('/productorsData', TransactionController.productorsData);
 router.post('/productorsCompany', TransactionController.productorsCompany);
-router.post('/traceabilityM', TransactionController.traceabilityM);
-router.post('/traceabilityC', TransactionController.traceabilityC);
-router.post('/traceabilityA', TransactionController.traceabilityA);
-router.post('/traceabilityP', TransactionController.traceabilityP);
+router.post('/traceability', TransactionController.traceabilityM);
+//router.post('/traceabilityM', TransactionController.traceabilityM);
+//router.post('/traceabilityC', TransactionController.traceabilityC);
+//router.post('/traceabilityA', TransactionController.traceabilityA);
+//router.post('/traceabilityP', TransactionController.traceabilityP);
 
 //router.get('/');
 
