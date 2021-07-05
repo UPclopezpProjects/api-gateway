@@ -14,8 +14,8 @@ const s3 = new AWS.S3({
     },
 });
 
-function traceability(req, res) {
-  serviceInitTraceability(req, function(data, err) {
+function traceabilityM(req, res) {
+  serviceInitTraceabilityM(req, function(data, err) {
       if (err) {
           res.status(500).send({ message: err });
       }else {
@@ -25,8 +25,89 @@ function traceability(req, res) {
   });
 }
 
-function serviceInitTraceability(req, next) {
-    var url = 'http://'+host.traceability+':'+port.traceability+''+path.traceability+'';
+function serviceInitTraceabilityM(req, next) {
+    var url = 'http://'+host.traceability+':'+port.traceability+''+path.traceabilityM+'';
+    axios.post(url, {
+        QR: req.body.QR,
+        ID: req.body.ID
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function traceabilityC(req, res) {
+  serviceInitTraceabilityC(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, names: data.names });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitTraceabilityC(req, next) {
+    var url = 'http://'+host.traceability+':'+port.traceability+''+path.traceabilityC+'';
+    axios.post(url, {
+        QR: req.body.QR,
+        ID: req.body.ID
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function traceabilityA(req, res) {
+  serviceInitTraceabilityA(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, names: data.names });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitTraceabilityA(req, next) {
+    var url = 'http://'+host.traceability+':'+port.traceability+''+path.traceabilityA+'';
+    axios.post(url, {
+        QR: req.body.QR,
+        ID: req.body.ID
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function traceabilityP(req, res) {
+  serviceInitTraceabilityP(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, names: data.names });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitTraceabilityP(req, next) {
+    var url = 'http://'+host.traceability+':'+port.traceability+''+path.traceabilityP+'';
     axios.post(url, {
         QR: req.body.QR,
         ID: req.body.ID
@@ -276,6 +357,7 @@ function serviceInitCarriers(req, next) {
     var url = 'http://'+host.carrier+':'+port.carrier+''+path.carrier+'';
     axios.post(url, {
       fid: req.body.fid,
+      code: req.body.code,
       ubication: req.body.ubication,
       name: req.body.name,
       previousStage: req.body.previousStage,
@@ -371,6 +453,7 @@ function serviceInitAcopios(req, next) {
     var url = 'http://'+host.acopio+':'+port.acopio+''+path.acopio+'';
     axios.post(url, {
       fid: req.body.fid,
+      code: req.body.code,
       ubication: req.body.ubication,
       name: req.body.name,
       previousStage: req.body.previousStage,
@@ -464,6 +547,7 @@ function serviceInitProductors(req, next) {
     var url = 'http://'+host.productor+':'+port.productor+''+path.productor+'';
     axios.post(url, {
       fid: req.body.fid,
+      code: req.body.code,
       ubication: req.body.ubication,
       name: req.body.name,
       harvestDate: req.body.harvestDate,
@@ -980,7 +1064,10 @@ function decodeToken(token){
 }
 
 module.exports = {
-  traceability,
+  traceabilityM,
+  traceabilityC,
+  traceabilityA,
+  traceabilityP,
   getData,
   getFileStream,
   getInitialNonce,
