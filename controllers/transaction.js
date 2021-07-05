@@ -1093,10 +1093,10 @@ function decodeToken(token){
 
 module.exports = {
   traceability,
-  traceabilityM,
-  traceabilityC,
-  traceabilityA,
-  traceabilityP,
+  //traceabilityM,
+  //traceabilityC,
+  //traceabilityA,
+  //traceabilityP,
   getData,
   getFileStream,
   getInitialNonce,
