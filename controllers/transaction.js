@@ -14,6 +14,34 @@ const s3 = new AWS.S3({
     },
 });
 
+function traceability(req, res) {
+  serviceInitTraceability(req, function(data, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, names: data.names });
+          //console.log(data);
+      }
+  });
+}
+
+function serviceInitTraceability(req, next) {
+    var url = 'http://'+host.traceability+':'+port.traceability+''+path.traceability+'';
+    axios.post(url, {
+        QR: req.body.QR,
+        ID: req.body.ID
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+/*
 function traceabilityM(req, res) {
   serviceInitTraceabilityM(req, function(data, err) {
       if (err) {
@@ -121,7 +149,7 @@ function serviceInitTraceabilityP(req, next) {
         next(null, error.response.data.message);
     });
 }
-
+*/
 async function getData(req, res) {
   try {
     //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});  productor: '/productorsData',
@@ -1064,6 +1092,7 @@ function decodeToken(token){
 }
 
 module.exports = {
+  traceability,
   traceabilityM,
   traceabilityC,
   traceabilityA,

@@ -47,6 +47,7 @@ global.path = {
   productor: '/productorsData',
   getCompany: '/getCompany',
   dataOfCompany: '/dataOfCompany',
+  traceability: '/traceability',
   traceabilityM: '/traceabilityM',
   traceabilityC: '/traceabilityC',
   traceabilityA: '/traceabilityA',
