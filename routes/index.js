@@ -33,6 +33,8 @@ router.post('/getCompanyP', TransactionController.getCompanyP);
 router.post('/productorsData', TransactionController.productorsData);
 router.post('/productorsCompany', TransactionController.productorsCompany);
 router.post('/traceability', TransactionController.traceability);
+router.get('/getHistory', TransactionController.getHistory);
+
 //router.post('/traceabilityM', TransactionController.traceabilityM);
 //router.post('/traceabilityC', TransactionController.traceabilityC);
 //router.post('/traceabilityA', TransactionController.traceabilityA);

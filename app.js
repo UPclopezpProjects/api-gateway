@@ -51,8 +51,8 @@ global.path = {
   traceabilityM: '/traceabilityM',
   traceabilityC: '/traceabilityC',
   traceabilityA: '/traceabilityA',
-  traceabilityP: '/traceabilityP'
-
+  traceabilityP: '/traceabilityP',
+  getHistory: '/getHistory'
 };
 //
 var createError = require('http-errors');
@@ -90,7 +90,14 @@ const storage = multer.memoryStorage({
   }
 });*/
 
-app.use(multer({storage}).single('image'));
+//app.use(multer({storage}).single('image'));
+app.use(multer({storage}).fields([{
+  name: 'image', maxCount: 1
+}, {
+  name: 'productPhotos', maxCount: 1
+}, {
+  name: 'vehiclePhotos', maxCount: 1
+}]));
 /*
 app.use(multer({
   storage,
@@ -157,7 +164,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  var resp = {message:"error de users - :C | "+err};
+  var resp = {message:"error de api-gateway - :C | "+err};
   res.send(resp);
   //res.render('error');
 });

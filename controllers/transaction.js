@@ -14,6 +14,101 @@ const s3 = new AWS.S3({
     },
 });
 
+function getHistory(req, res) {
+  var typeOfUser = req.query.typeOfUser;
+  if(typeOfUser == 'Merchant'){
+    serviceInitHistoryM(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ history: data.history });
+      }
+    });
+  } else if(typeOfUser == 'Carrier'){
+    serviceInitHistoryC(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ history: data.history });
+      }
+    });
+  } else if(typeOfUser == 'Acopio'){
+    serviceInitHistoryA(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ history: data.history });
+      }
+    });
+  } else if(typeOfUser == 'Productor'){
+    console.log('toy');
+    serviceInitHistoryP(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ history: data.history });
+      }
+    });
+  }
+}
+
+function serviceInitHistoryM(req, next) {
+    var url = 'http://'+host.merchant+':'+port.merchant+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
+    console.log(url);
+    axios.get(url)
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function serviceInitHistoryC(req, next) {
+    var url = 'http://'+host.carrier+':'+port.carrier+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
+    console.log(url);
+    axios.get(url)
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function serviceInitHistoryA(req, next) {
+    var url = 'http://'+host.acopio+':'+port.acopio+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
+    console.log(url);
+    axios.get(url)
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function serviceInitHistoryP(req, next) {
+    var url = 'http://'+host.productor+':'+port.productor+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
+    console.log(url);
+    axios.get(url)
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+
 function traceability(req, res) {
   serviceInitTraceability(req, function(data, err) {
       if (err) {
@@ -174,21 +269,83 @@ async function getData(req, res) {
 }
 
 function uploadImages(req, next) {
-  let myFile = req.file.originalname.split(".");
-  const fileType = myFile[myFile.length - 1];
-  const params = {
-      Bucket: process.env.AWS_BUCKET_NAME,
-      Key: `${uuid.v4()}.${fileType}`,
-      Body: req.file.buffer
-  };
-  s3.upload(params, (error, dataAWS) => {
-    if(error){
-      next(null, error);
-      //res.status(500).send(error);
-    }else {
-      next(dataAWS.Key, null);
+  if (req.files.vehiclePhotos == undefined && req.files.productPhotos == undefined || req.files.vehiclePhotos == 'undefined' && req.files.productPhotos == 'undefined') {
+    console.log("undefined for vehiclePhotos and productPhotos");
+    for(var fileImage of req.files.image){
+      let myFile = fileImage.originalname.split(".");
+      const fileType = myFile[myFile.length - 1];
+      const params = {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: `${uuid.v4()}.${fileType}`,
+          Body: fileImage.buffer
+      };
+      s3.upload(params, (error, dataAWS) => {
+        if(error){
+          next(null, error);
+          //res.status(500).send(error);
+        }else {
+          next(dataAWS.Key, null);
+        }
+      });
     }
-  });
+  }else {
+    var fileNames = [];
+    for(var fileImage of req.files.image){
+      let myFile = fileImage.originalname.split(".");
+      const fileType = myFile[myFile.length - 1];
+      const params = {
+          Bucket: process.env.AWS_BUCKET_NAME,
+          Key: `${uuid.v4()}.${fileType}`,
+          Body: fileImage.buffer
+      };
+      s3.upload(params, (error, dataAWS) => {
+        if(error){
+          next(null, error);
+          //res.status(500).send(error);
+        }else {
+          fileNames.push(dataAWS.Key);
+          console.log("0: " +fileNames);
+          for(var fileVehicle of req.files.vehiclePhotos){
+            let myFile = fileVehicle.originalname.split(".");
+            const fileType = myFile[myFile.length - 1];
+            const params = {
+                Bucket: process.env.AWS_BUCKET_NAME,
+                Key: `${uuid.v4()}.${fileType}`,
+                Body: fileVehicle.buffer
+            };
+            s3.upload(params, (error, dataAWS) => {
+              if(error){
+                next(null, error);
+                //res.status(500).send(error);
+              }else {
+                fileNames.push(dataAWS.Key);
+                console.log("1: " +fileNames);
+                for(var fileProduct of req.files.productPhotos){
+                  let myFile = fileProduct.originalname.split(".");
+                  const fileType = myFile[myFile.length - 1];
+                  const params = {
+                      Bucket: process.env.AWS_BUCKET_NAME,
+                      Key: `${uuid.v4()}.${fileType}`,
+                      Body: fileProduct.buffer
+                  };
+                  s3.upload(params, (error, dataAWS) => {
+                    if(error){
+                      next(null, error);
+                      //res.status(500).send(error);
+                    }else {
+                      fileNames.push(dataAWS.Key);
+                      console.log("2: " +fileNames);
+                      next(fileNames, null);
+                    }
+                  });
+                }
+              }
+            });
+          }
+        }
+      });
+    }
+  }
 }
 
 function getFileStream(req, res) {
@@ -364,11 +521,14 @@ function serviceInitGetCompanyC(req, next) {
 }
 
 function carriersData(req, res){
-  uploadImages(req, function(imageName, err) {
+  uploadImages(req, function(imageNames, err) {
       if (err) {
           res.status(500).send({ message: err });
       }else {
-        req.body.image = imageName;
+        console.log(imageNames);
+        req.body.image = imageNames[0];
+        req.body.vehiclePhotos = imageNames[1];
+        req.body.productPhotos = imageNames[2];
         serviceInitCarriers(req, function(data, err) {
             if (err) {
                 res.status(500).send({ message: err });
@@ -392,7 +552,14 @@ function serviceInitCarriers(req, next) {
       currentStage: req.body.currentStage,
       nameOfCompany: req.body.nameOfCompany,
       image: req.body.image,
-      description: req.body.description
+      description: req.body.description,
+      driverName: req.body.driverName,
+      origin: req.body.origin,
+      destination: req.body.destination,
+      plates: req.body.plates,
+      productPhotos: req.body.productPhotos,
+      vehiclePhotos: req.body.vehiclePhotos,
+      tracking: req.body.tracking
     })
     .then(response => {
         //console.log(response.data);
@@ -458,8 +625,6 @@ function serviceInitGetCompanyA(req, next) {
 }
 
 function acopiosData(req, res){
-  console.log(req.file);
-  console.log(req.body);
   uploadImages(req, function(imageName, err) {
       if (err) {
           res.status(500).send({ message: err });
@@ -558,6 +723,7 @@ function productorsData(req, res){
       if (err) {
           res.status(500).send({ message: err });
       }else {
+        console.log(imageName);
         req.body.image = imageName;
         serviceInitProductors(req, function(data, err) {
             if (err) {
@@ -588,7 +754,7 @@ function serviceInitProductors(req, next) {
       nameOfCompany: req.body.nameOfCompany,
     })
     .then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         next(response.data, null);
     })
     .catch(error => {
@@ -649,7 +815,7 @@ function verifyEmail(req, res){
 
 function serviceInitGetEmail(req, next) {
     var url = 'http://'+host.users+':'+port.users+''+path.verifyEmail+'?code='+req.query.code+'&email='+req.query.email+'';
-    console.log(url);
+    //console.log(url);
     axios.get(url)
     .then(response => {
         //console.log(response.data);
@@ -1093,6 +1259,7 @@ function decodeToken(token){
 
 module.exports = {
   traceability,
+  getHistory,
   //traceabilityM,
   //traceabilityC,
   //traceabilityA,
