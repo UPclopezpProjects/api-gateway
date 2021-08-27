@@ -41,7 +41,7 @@ function getHistory(req, res) {
       }
     });
   } else if(typeOfUser == 'Productor'){
-    console.log('toy');
+    //console.log('toy');
     serviceInitHistoryP(req, function(data, err) {
       if (err) {
         res.status(500).send({ message: err });
@@ -54,7 +54,7 @@ function getHistory(req, res) {
 
 function serviceInitHistoryM(req, next) {
     var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
-    console.log(url);
+    //console.log(url);
     axios.get(url)
     .then(response => {
         //console.log(response.data);
@@ -68,7 +68,7 @@ function serviceInitHistoryM(req, next) {
 
 function serviceInitHistoryC(req, next) {
     var url = 'http://'+host.carrier+':'+port.carrier+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
-    console.log(url);
+   //console.log(url);
     axios.get(url)
     .then(response => {
         //console.log(response.data);
@@ -82,7 +82,7 @@ function serviceInitHistoryC(req, next) {
 
 function serviceInitHistoryA(req, next) {
     var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
-    console.log(url);
+    //console.log(url);
     axios.get(url)
     .then(response => {
         //console.log(response.data);
@@ -96,7 +96,7 @@ function serviceInitHistoryA(req, next) {
 
 function serviceInitHistoryP(req, next) {
     var url = 'http://'+host.productor+':'+port.productor+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
-    console.log(url);
+    //console.log(url);
     axios.get(url)
     .then(response => {
         //console.log(response.data);
@@ -263,7 +263,7 @@ async function getData(req, res) {
     res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message });
   } catch (error) {
     //console.log(error);
-    console.log(error);
+    //console.log(error);
     res.status(200).send({ message: error });
   }
 }
@@ -304,7 +304,7 @@ function uploadImages(req, next) {
           //res.status(500).send(error);
         }else {
           fileNames.push(dataAWS.Key);
-          console.log("0: " +fileNames);
+          //console.log("0: " +fileNames);
           for(var fileVehicle of req.files.vehiclePhotos){
             let myFile = fileVehicle.originalname.split(".");
             const fileType = myFile[myFile.length - 1];
@@ -319,7 +319,7 @@ function uploadImages(req, next) {
                 //res.status(500).send(error);
               }else {
                 fileNames.push(dataAWS.Key);
-                console.log("1: " +fileNames);
+                //console.log("1: " +fileNames);
                 for(var fileProduct of req.files.productPhotos){
                   let myFile = fileProduct.originalname.split(".");
                   const fileType = myFile[myFile.length - 1];
@@ -334,7 +334,7 @@ function uploadImages(req, next) {
                       //res.status(500).send(error);
                     }else {
                       fileNames.push(dataAWS.Key);
-                      console.log("2: " +fileNames);
+                      //console.log("2: " +fileNames);
                       next(fileNames, null);
                     }
                   });
@@ -568,7 +568,7 @@ function carriersData(req, res){
       if (err) {
           res.status(500).send({ message: err });
       }else {
-        console.log(imageNames);
+        //console.log(imageNames);
         req.body.image = imageNames[0];
         req.body.vehiclePhotos = imageNames[1];
         req.body.productPhotos = imageNames[2];
@@ -812,7 +812,7 @@ function serviceInitProductorsCompany(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        console.log(error);
+        //console.log(error);
         next(null, error.response.data.message);
     });
 }
@@ -848,7 +848,7 @@ function productorsData(req, res){
       if (err) {
           res.status(500).send({ message: err });
       }else {
-        console.log(imageName);
+        //console.log(imageName);
         req.body.image = imageName;
         serviceInitProductors(req, function(data, err) {
             if (err) {
@@ -883,8 +883,8 @@ function serviceInitProductors(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        console.log(error);
-        console.log(error.response.data.message);
+        //console.log(error);
+        //console.log(error.response.data.message);
         next(null, error.response.data.message);
     });
 }
@@ -1005,7 +1005,7 @@ function userCreation(req, res){
       if (err) {
         res.status(500).send({ message: err });
       }else {
-        console.log(data);
+        //console.log(data);
         res.status(200).send({ message: data.message });
       }
     });
@@ -1085,8 +1085,10 @@ function serviceInitUserCreation(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        console.log(error);
+        //console.log(error);
+        //next(null, error.response.data.message);
         next(null, error.response.data.message);
+
     });
 }
 
@@ -1349,7 +1351,7 @@ function serviceInitResetPasswordGET(req, next) {
 }
 
 function resetPasswordPUT(req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   serviceInitResetPasswordPUT(req, function(data, err) {
     if (err) {
       res.status(500).send({ message: err });
