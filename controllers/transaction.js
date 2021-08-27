@@ -123,7 +123,7 @@ function traceability(req, res) {
 function serviceInitTraceability(req, next) {
     var url = 'http://'+host.traceability+':'+port.traceability+''+path.traceability+'';
     axios.post(url, {
-        QR: req.body.QR,
+        Code: req.body.Code,
         ID: req.body.ID
     })
     .then(response => {
@@ -251,20 +251,25 @@ async function getData(req, res) {
     const resMerchant = await axios.get('http://'+host.merchantIn+':'+port.merchantIn+''+path.getData+'');
     //data.push(resMerchant.data.message);
 
+    const resMerchantOut = await axios.get('http://'+host.merchantOut+':'+port.merchantOut+''+path.getData+'');
+    //data.push(resMerchant.data.message);
+
     const resCarrier = await axios.get('http://'+host.carrier+':'+port.carrier+''+path.getData+'');
     //data.push(resCarrier.data.message);
 
     const resAcopio = await axios.get('http://'+host.acopioIn+':'+port.acopioIn+''+path.getData+'');
     //data.push(resAcopio.data.message);
 
+    const resAcopioOut = await axios.get('http://'+host.acopioOut+':'+port.acopioOut+''+path.getData+'');
+    //data.push(resAcopio.data.message);
+
     const resProductor = await axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
     //data.push(resProductor.data.message);
-
-    res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message });
+    //console.log(resProductor, resAcopio, resAcopioOut, resCarrier, resMerchant, resMerchantOut);
+    res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, acopioOut: resAcopioOut.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message, merchantOut: resMerchantOut.data.message });
   } catch (error) {
     //console.log(error);
-    //console.log(error);
-    res.status(200).send({ message: error });
+    res.status(400).send({ message: error });
   }
 }
 
@@ -456,7 +461,8 @@ function serviceInitMerchants(req, next) {
         nameOfCompany: req.body.nameOfCompany,
         image: req.body.image,
         description: req.body.description,
-        arrivalDate: req.body.arrivalDate
+        arrivalDate: req.body.arrivalDate,
+        departureDate: req.body.departureDate
     })
     .then(response => {
         //console.log(response.data);
@@ -474,12 +480,19 @@ function merchantsDataOut(req, res){
           res.status(500).send({ message: err });
       }else {
         req.body.image = imageName;
-        serviceInitMerchantsOut(req, function(data, err) {
+        updateTransactionM(req, function(data, err) {
             if (err) {
                 res.status(500).send({ message: err });
             }else {
-              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
-                //console.log(data);
+              //console.log(data);
+              serviceInitMerchantsOut(req, function(data, err) {
+                  if (err) {
+                      res.status(500).send({ message: err });
+                  }else {
+                    res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                      //console.log(data);
+                  }
+              });
             }
         });
       }
@@ -498,6 +511,7 @@ function serviceInitMerchantsOut(req, next) {
         nameOfCompany: req.body.nameOfCompany,
         image: req.body.image,
         description: req.body.description,
+        arrivalDate: req.body.arrivalDate,
         departureDate: req.body.departureDate
     })
     .then(response => {
@@ -508,6 +522,33 @@ function serviceInitMerchantsOut(req, next) {
         //console.log(error);
         next(null, error.response.data.message);
     });
+}
+
+function updateTransactionM(req, next){
+  serviceInitMerchantsUpdate(req, function(data, err) {
+    if (err) {
+      next(null, err);
+    }else {
+      //console.log(data);
+      next(data.message, null);
+    }
+  });
+}
+
+function serviceInitMerchantsUpdate(req, next) {
+  var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.merchantsDataUpdate+'';
+  axios.put(url, {
+    id: req.body.fid,
+    departureDate: req.body.departureDate
+  })
+  .then(response => {
+    //console.log(response.data);
+    next(response.data, null);
+  })
+  .catch(error => {
+    //console.log(error);
+    next(null, error.response.data.message);
+  });
 }
 
 function carriersCompany(req, res) {
@@ -721,14 +762,25 @@ function acopiosDataOut(req, res){
           res.status(500).send({ message: err });
       }else {
         req.body.image = imageName;
-        serviceInitAcopiosOut(req, function(data, err) {
+        updateTransactionA(req, function(data, err) {
             if (err) {
                 res.status(500).send({ message: err });
             }else {
-              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
-                //console.log(data);
+              if (data == true) {
+                serviceInitAcopiosOut(req, function(data, err) {
+                    if (err) {
+                        res.status(500).send({ message: err });
+                    }else {
+                      res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                      //console.log(data);
+                    }
+                });
+              }else if(data == false) {
+                res.status(400).send({ message: 'No hay stock' });
+              }
             }
         });
+
       }
   });
 }
@@ -763,22 +815,21 @@ function serviceInitAcopiosOut(req, next) {
   });
 }
 
-function updateTransaction(req, res){
+function updateTransactionA(req, next){
   serviceInitAcopiosUpdate(req, function(data, err) {
     if (err) {
-      res.status(500).send({ message: err });
+      next(null, err);
     }else {
-      res.status(200).send({ message: data.message, info: data.info });
+      next(data.message, null);
     }
   });
 }
 
 function serviceInitAcopiosUpdate(req, next) {
-  var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.acopiosDataUpdate+'';
+  var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.acopiosDataUpdate+'';
   axios.put(url, {
-    _id: req.body._id,
-    departureDate: req.body.departureDate,
-    whoDelivers: req.body.whoDelivers,
+    id: req.body.fid,
+    quantity: req.body.quantity
   })
   .then(response => {
     //console.log(response.data);
@@ -1420,7 +1471,7 @@ module.exports = {
   acopiosData,
   acopiosDataOut,
 
-  updateTransaction,
+  //updateTransactionA,
   getCompanyP,
   productorsCompany,
   productorsData

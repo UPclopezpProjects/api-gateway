@@ -32,8 +32,8 @@ router.post('/getCompanyA', TransactionController.getCompanyA);
 
 router.post('/acopiosDataIn', TransactionController.acopiosData);
 router.post('/acopiosDataOut', TransactionController.acopiosDataOut);
+//router.put('/acopiosDataUpdate', TransactionController.updateTransaction);
 
-router.put('/acopiosDataUpdate', TransactionController.updateTransaction);
 router.post('/acopiosCompany', TransactionController.acopiosCompany);
 router.post('/getCompanyP', TransactionController.getCompanyP);
 router.post('/productorsData', TransactionController.productorsData);
