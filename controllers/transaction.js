@@ -53,7 +53,7 @@ function getHistory(req, res) {
 }
 
 function serviceInitHistoryM(req, next) {
-    var url = 'http://'+host.merchant+':'+port.merchant+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
+    var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
     console.log(url);
     axios.get(url)
     .then(response => {
@@ -81,7 +81,7 @@ function serviceInitHistoryC(req, next) {
 }
 
 function serviceInitHistoryA(req, next) {
-    var url = 'http://'+host.acopio+':'+port.acopio+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
+    var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
     console.log(url);
     axios.get(url)
     .then(response => {
@@ -248,13 +248,13 @@ function serviceInitTraceabilityP(req, next) {
 async function getData(req, res) {
   try {
     //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});  productor: '/productorsData',
-    const resMerchant = await axios.get('http://'+host.merchant+':'+port.merchant+''+path.getData+'');
+    const resMerchant = await axios.get('http://'+host.merchantIn+':'+port.merchantIn+''+path.getData+'');
     //data.push(resMerchant.data.message);
 
     const resCarrier = await axios.get('http://'+host.carrier+':'+port.carrier+''+path.getData+'');
     //data.push(resCarrier.data.message);
 
-    const resAcopio = await axios.get('http://'+host.acopio+':'+port.acopio+''+path.getData+'');
+    const resAcopio = await axios.get('http://'+host.acopioIn+':'+port.acopioIn+''+path.getData+'');
     //data.push(resAcopio.data.message);
 
     const resProductor = await axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
@@ -270,7 +270,7 @@ async function getData(req, res) {
 
 function uploadImages(req, next) {
   if (req.files.vehiclePhotos == undefined && req.files.productPhotos == undefined || req.files.vehiclePhotos == 'undefined' && req.files.productPhotos == 'undefined') {
-    console.log("undefined for vehiclePhotos and productPhotos");
+    //console.log("undefined for vehiclePhotos and productPhotos");
     for(var fileImage of req.files.image){
       let myFile = fileImage.originalname.split(".");
       const fileType = myFile[myFile.length - 1];
@@ -385,7 +385,7 @@ function merchantsCompany(req, res) {
 }
 
 function serviceInitMerchantsCompany(req, next) {
-    var url = 'http://'+host.merchant+':'+port.merchant+''+path.merchantsCompany+'';
+    var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.merchantsCompany+'';
     axios.post(url, {
         email: req.body.email,
         nameOfCompany: req.body.nameOfCompany
@@ -412,7 +412,7 @@ function getCompanyM(req, res) {
 }
 
 function serviceInitGetCompanyM(req, next) {
-    var url = 'http://'+host.merchant+':'+port.merchant+''+path.getCompanyM+'';
+    var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.getCompanyM+'';
     axios.post(url, {
         email: req.body.email
     })
@@ -445,7 +445,7 @@ function merchantsData(req, res){
 }
 
 function serviceInitMerchants(req, next) {
-    var url = 'http://'+host.merchant+':'+port.merchant+''+path.merchant+'';
+    var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.merchantIn+'';
     axios.post(url, {
         fid: req.body.fid,
         code: req.body.code,
@@ -455,7 +455,50 @@ function serviceInitMerchants(req, next) {
         currentStage: req.body.currentStage,
         nameOfCompany: req.body.nameOfCompany,
         image: req.body.image,
-        description: req.body.description
+        description: req.body.description,
+        arrivalDate: req.body.arrivalDate
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function merchantsDataOut(req, res){
+  uploadImages(req, function(imageName, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        req.body.image = imageName;
+        serviceInitMerchantsOut(req, function(data, err) {
+            if (err) {
+                res.status(500).send({ message: err });
+            }else {
+              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                //console.log(data);
+            }
+        });
+      }
+  });
+}
+
+function serviceInitMerchantsOut(req, next) {
+    var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.merchantOut+'';
+    axios.post(url, {
+        fid: req.body.fid,
+        code: req.body.code,
+        ubication: req.body.ubication,
+        name: req.body.name,
+        previousStage: req.body.previousStage,
+        currentStage: req.body.currentStage,
+        nameOfCompany: req.body.nameOfCompany,
+        image: req.body.image,
+        description: req.body.description,
+        departureDate: req.body.departureDate
     })
     .then(response => {
         //console.log(response.data);
@@ -583,7 +626,7 @@ function acopiosCompany(req, res) {
 }
 
 function serviceInitAcopiosCompany(req, next) {
-    var url = 'http://'+host.acopio+':'+port.acopio+''+path.acopiosCompany+'';
+    var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.acopiosCompany+'';
     axios.post(url, {
         email: req.body.email,
         nameOfCompany: req.body.nameOfCompany
@@ -610,7 +653,7 @@ function getCompanyA(req, res) {
 }
 
 function serviceInitGetCompanyA(req, next) {
-    var url = 'http://'+host.acopio+':'+port.acopio+''+path.getCompanyA+'';
+    var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.getCompanyA+'';
     axios.post(url, {
         email: req.body.email
     })
@@ -643,26 +686,108 @@ function acopiosData(req, res){
 }
 
 function serviceInitAcopios(req, next) {
-    var url = 'http://'+host.acopio+':'+port.acopio+''+path.acopio+'';
-    axios.post(url, {
-      fid: req.body.fid,
-      code: req.body.code,
-      ubication: req.body.ubication,
-      name: req.body.name,
-      previousStage: req.body.previousStage,
-      currentStage: req.body.currentStage,
-      nameOfCompany: req.body.nameOfCompany,
-      image: req.body.image,
-      description: req.body.description
-    })
-    .then(response => {
-        //console.log(response.data);
-        next(response.data, null);
-    })
-    .catch(error => {
-        //console.log(error);
-        next(null, error.response.data.message);
-    });
+  var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.acopioIn+'';
+  axios.post(url, {
+    fid: req.body.fid,
+    code: req.body.code,
+    ubication: req.body.ubication,
+    name: req.body.name,
+    previousStage: req.body.previousStage,
+    currentStage: req.body.currentStage,
+    nameOfCompany: req.body.nameOfCompany,
+    image: req.body.image,
+    description: req.body.description,
+    arrivalDate: req.body.arrivalDate,
+    //departureDate: req.body.departureDate,
+    clasification: req.body.clasification,
+    quantity: req.body.quantity,
+    measure: req.body.measure,
+    whoReceives: req.body.whoReceives,
+    //whoDelivers: req.body.whoDelivers
+  })
+  .then(response => {
+    //console.log(response.data);
+    next(response.data, null);
+  })
+  .catch(error => {
+    //console.log(error);
+    next(null, error.response.data.message);
+  });
+}
+
+function acopiosDataOut(req, res){
+  uploadImages(req, function(imageName, err) {
+      if (err) {
+          res.status(500).send({ message: err });
+      }else {
+        req.body.image = imageName;
+        serviceInitAcopiosOut(req, function(data, err) {
+            if (err) {
+                res.status(500).send({ message: err });
+            }else {
+              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                //console.log(data);
+            }
+        });
+      }
+  });
+}
+
+function serviceInitAcopiosOut(req, next) {
+  var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.acopioOut+'';
+  axios.post(url, {
+    fid: req.body.fid,
+    code: req.body.code,
+    ubication: req.body.ubication,
+    name: req.body.name,
+    previousStage: req.body.previousStage,
+    currentStage: req.body.currentStage,
+    nameOfCompany: req.body.nameOfCompany,
+    image: req.body.image,
+    description: req.body.description,
+    //arrivalDate: req.body.arrivalDate,
+    departureDate: req.body.departureDate,
+    clasification: req.body.clasification,
+    quantity: req.body.quantity,
+    measure: req.body.measure,
+    //whoReceives: req.body.whoReceives,
+    whoDelivers: req.body.whoDelivers
+  })
+  .then(response => {
+    //console.log(response.data);
+    next(response.data, null);
+  })
+  .catch(error => {
+    //console.log(error);
+    next(null, error.response.data.message);
+  });
+}
+
+function updateTransaction(req, res){
+  serviceInitAcopiosUpdate(req, function(data, err) {
+    if (err) {
+      res.status(500).send({ message: err });
+    }else {
+      res.status(200).send({ message: data.message, info: data.info });
+    }
+  });
+}
+
+function serviceInitAcopiosUpdate(req, next) {
+  var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.acopiosDataUpdate+'';
+  axios.put(url, {
+    _id: req.body._id,
+    departureDate: req.body.departureDate,
+    whoDelivers: req.body.whoDelivers,
+  })
+  .then(response => {
+    //console.log(response.data);
+    next(response.data, null);
+  })
+  .catch(error => {
+    //console.log(error);
+    next(null, error.response.data.message);
+  });
 }
 
 function productorsCompany(req, res) {
@@ -1280,13 +1405,20 @@ module.exports = {
   resetPasswordPUT,
   getCompanyM,
   merchantsCompany,
+
   merchantsData,
+  merchantsDataOut,
+
   getCompanyC,
   carriersCompany,
   carriersData,
   getCompanyA,
   acopiosCompany,
+
   acopiosData,
+  acopiosDataOut,
+
+  updateTransaction,
   getCompanyP,
   productorsCompany,
   productorsData

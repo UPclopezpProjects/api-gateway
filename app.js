@@ -4,20 +4,24 @@
 global.host = {
   audit: '172.18.1.4',
   users: '172.18.1.5',
-  merchant: '172.18.1.6',
+  merchantIn: '172.18.1.6',
   carrier: '172.18.1.7',
-  acopio: '172.18.1.8',
+  acopioIn: '172.18.1.8',
   productor: '172.18.1.9',
-  traceability: '172.18.1.10'
+  traceability: '172.18.1.10',
+  merchantOut: '172.18.1.11',
+  acopioOut: '172.18.1.12'
 };
 global.port = {
   audit: '3000',
   users: '3001',
-  merchant: '3002',
+  merchantIn: '3002',
   carrier: '3003',
-  acopio: '3004',
+  acopioIn: '3004',
   productor: '3005',
-  traceability: '3006'
+  traceability: '3006',
+  merchantOut: '3007',
+  acopioOut: '3008'
 };
 global.path = {
   audit: '/exec/createUserSC',
@@ -35,13 +39,16 @@ global.path = {
   getData: '/getData',
   merchantsCompany: '/dataOfCompany',
   getCompanyM: '/getCompany',
-  merchant: '/merchantsData',
+  merchantIn: '/merchantsDataIn',
+  merchantOut: '/merchantsDataOut',
   carriersCompany: '/dataOfCompany',
   getCompanyC: '/getCompany',
   carrier: '/carriersData',
   acopiosCompany: '/dataOfCompany',
   getCompanyA: '/getCompany',
-  acopio: '/acopiosData',
+  acopioIn: '/acopiosDataIn',
+  acopioOut: '/acopiosDataOut',
+  acopiosDataUpdate: '/acopiosDataUpdate',
   productorsCompany: '/dataOfCompany',
   getCompanyP: '/getCompany',
   productor: '/productorsData',
