@@ -21,10 +21,6 @@ function getHistory(req, res) {
       if (err) {
         res.status(500).send({ message: err });
       }else {
-        if (data.history == null) {
-          res.status(400).send({ history: 'No ha registrado salidas' });
-          return;
-        }
         res.status(200).send({ history: data.history });
       }
     });
@@ -33,10 +29,6 @@ function getHistory(req, res) {
       if (err) {
         res.status(500).send({ message: err });
       }else {
-        if (data.history == null) {
-          res.status(400).send({ history: 'No ha registrado salidas' });
-          return;
-        }
         res.status(200).send({ history: data.history });
       }
     });
@@ -45,10 +37,6 @@ function getHistory(req, res) {
       if (err) {
         res.status(500).send({ message: err });
       }else {
-        if (data.history == null) {
-          res.status(400).send({ history: 'No ha registrado salidas' });
-          return;
-        }
         res.status(200).send({ history: data.history });
       }
     });
@@ -58,10 +46,6 @@ function getHistory(req, res) {
       if (err) {
         res.status(500).send({ message: err });
       }else {
-        if (data.history == null) {
-          res.status(400).send({ history: 'No ha registrado salidas' });
-          return;
-        }
         res.status(200).send({ history: data.history });
       }
     });
@@ -296,6 +280,10 @@ function getDataOut(req, res){
       if (err) {
         res.status(500).send({ message: err });
       }else {
+        if (data.history == null) {
+          res.status(400).send({ history: 'No ha registrado salidas' });
+          return;
+        }
         res.status(200).send({ history: data.history });
       }
     });
@@ -307,6 +295,10 @@ function getDataOut(req, res){
       if (err) {
         res.status(500).send({ message: err });
       }else {
+        if (data.history == null) {
+          res.status(400).send({ history: 'No ha registrado salidas' });
+          return;
+        }
         res.status(200).send({ history: data.history });
       }
     });
