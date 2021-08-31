@@ -21,6 +21,10 @@ function getHistory(req, res) {
       if (err) {
         res.status(500).send({ message: err });
       }else {
+        if (data.history == null) {
+          res.status(400).send({ history: 'No ha registrado salidas' });
+          return;
+        }
         res.status(200).send({ history: data.history });
       }
     });
@@ -29,6 +33,10 @@ function getHistory(req, res) {
       if (err) {
         res.status(500).send({ message: err });
       }else {
+        if (data.history == null) {
+          res.status(400).send({ history: 'No ha registrado salidas' });
+          return;
+        }
         res.status(200).send({ history: data.history });
       }
     });
@@ -37,6 +45,10 @@ function getHistory(req, res) {
       if (err) {
         res.status(500).send({ message: err });
       }else {
+        if (data.history == null) {
+          res.status(400).send({ history: 'No ha registrado salidas' });
+          return;
+        }
         res.status(200).send({ history: data.history });
       }
     });
@@ -46,6 +58,10 @@ function getHistory(req, res) {
       if (err) {
         res.status(500).send({ message: err });
       }else {
+        if (data.history == null) {
+          res.status(400).send({ history: 'No ha registrado salidas' });
+          return;
+        }
         res.status(200).send({ history: data.history });
       }
     });
@@ -826,7 +842,6 @@ function serviceInitAcopios(req, next) {
 }
 
 function acopiosDataOut(req, res){
-  console.log(typeof req.body.quantity);
   if (req.body.id == '' || req.body.quantity == '') {
     res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
     return;
