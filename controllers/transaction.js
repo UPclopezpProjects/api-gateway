@@ -829,9 +829,9 @@ function serviceInitAcopios(req, next) {
 }
 
 function acopiosDataOut(req, res){
-  console.log(typeof req.body.quantity);
-  console.log(req.body.quantity);
-  console.log(123);
+  var quantity = 0;
+  quantity = req.body.quantity;
+  console.log(typeof quantity);
   if (req.body.id == '' || req.body.quantity == '') {
     res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
     return;
