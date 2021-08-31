@@ -543,15 +543,18 @@ function merchantsDataOut(req, res){
             if (err) {
                 res.status(500).send({ message: err });
             }else {
-              //console.log(data);
-              serviceInitMerchantsOut(req, function(data, err) {
-                  if (err) {
-                      res.status(500).send({ message: err });
-                  }else {
-                    res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
-                      //console.log(data);
-                  }
-              });
+              if (data == true) {
+                serviceInitMerchantsOut(req, function(data, err) {
+                    if (err) {
+                        res.status(500).send({ message: err });
+                    }else {
+                      res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                        //console.log(data);
+                    }
+                });
+              }else if(data == false) {
+                res.status(400).send({ message: 'No hay stock' });
+              }
             }
         });
       }
@@ -588,7 +591,7 @@ function updateTransactionM(req, next){
     if (err) {
       next(null, err);
     }else {
-      //console.log(data);
+      console.log(data);
       next(data.message, null);
     }
   });
@@ -598,7 +601,7 @@ function serviceInitMerchantsUpdate(req, next) {
   var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.merchantsDataUpdate+'';
   axios.put(url, {
     id: req.body.fid,
-    departureDate: req.body.departureDate
+    quantity: req.body.quantity
   })
   .then(response => {
     //console.log(response.data);
