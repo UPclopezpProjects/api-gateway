@@ -273,21 +273,37 @@ async function getData(req, res) {
   }
 }
 
-function getDataOutA(req, res){
-  console.log(req.body);
-  serviceInitGetDataOutA(req, function(data, err) {
-    if (err) {
-      res.status(500).send({ message: err });
-    }else {
-      res.status(200).send({ history: data.history });
-    }
-  });
+function getDataOut(req, res){
+  var typeOfUser = req.query.typeOfUser;
+  if(typeOfUser == 'Merchant'){
+    serviceInitGetDataOutM(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ history: data.history });
+      }
+    });
+  } else if(typeOfUser == 'Carrier'){
+    console.log("EN CARRIER NO HAY");
+    res.status(500).send({ message: "NO EXISTE PARA CARRIER" });
+  } else if(typeOfUser == 'Acopio'){
+    serviceInitGetDataOutA(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ history: data.history });
+      }
+    });
+  } else if(typeOfUser == 'Productor'){
+    console.log("EN PRODUCTOR NO HAY");
+    res.status(500).send({ message: "NO EXISTE PARA PRODUCTOR" });
+  }
 }
 
 function serviceInitGetDataOutA(req, next) {
     var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.getDataOut+'';
     axios.post(url, {
-        fid: req.body.fid
+        fid: req.query.fid
     })
     .then(response => {
         //console.log(response.data);
@@ -299,24 +315,11 @@ function serviceInitGetDataOutA(req, next) {
     });
 }
 
-function getDataOutM(req, res){
-  serviceInitGetDataOutM(req, function(data, err) {
-    if (err) {
-      res.status(500).send({ message: err });
-    }else {
-      console.log(data);
-      res.status(200).send({ history: data.history });
-
-      //console.log(data);
-    }
-  });
-}
-
 function serviceInitGetDataOutM(req, next) {
     var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.getDataOut+'';
     //console.log(url);
     axios.post(url, {
-        fid: req.body.fid
+        fid: req.query.fid
     })
     .then(response => {
         //console.log(response.data);
@@ -1499,8 +1502,7 @@ module.exports = {
   //traceabilityA,
   //traceabilityP,
   getData,
-  getDataOutA,
-  getDataOutM,
+  getDataOut,
   getFileStream,
   getInitialNonce,
   verifyEmail,
