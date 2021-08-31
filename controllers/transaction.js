@@ -521,7 +521,7 @@ function serviceInitMerchants(req, next) {
         image: req.body.image,
         description: req.body.description,
         arrivalDate: req.body.arrivalDate,
-        departureDate: req.body.departureDate
+        quantity: req.body.quantity
     })
     .then(response => {
         //console.log(response.data);
@@ -570,7 +570,7 @@ function serviceInitMerchantsOut(req, next) {
         nameOfCompany: req.body.nameOfCompany,
         image: req.body.image,
         description: req.body.description,
-        arrivalDate: req.body.arrivalDate,
+        quantity: req.body.quantity,
         departureDate: req.body.departureDate
     })
     .then(response => {
