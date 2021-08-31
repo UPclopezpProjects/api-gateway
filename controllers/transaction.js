@@ -830,6 +830,8 @@ function serviceInitAcopios(req, next) {
 
 function acopiosDataOut(req, res){
   var quantity = 0;
+  console.log(typeof quantity);
+  
   quantity = req.body.quantity;
   console.log(typeof quantity);
   if (req.body.id == '' || req.body.quantity == '') {
