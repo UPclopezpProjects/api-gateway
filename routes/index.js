@@ -8,6 +8,10 @@ router.get('/images', TransactionController.getFileStream);
 router.get('/images/:id', TransactionController.getFileStream);
 
 router.get('/getData', TransactionController.getData);
+router.get('/getDataOutA', TransactionController.getDataOutA);
+router.get('/getDataOutM', TransactionController.getDataOutM);
+
+
 router.post('/login', TransactionController.login);
 router.post('/getInitialNonce', TransactionController.getInitialNonce);
 router.get('/verifyEmail', TransactionController.verifyEmail);

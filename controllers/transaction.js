@@ -273,6 +273,62 @@ async function getData(req, res) {
   }
 }
 
+function getDataOutA(req, res){
+  console.log(req.body);
+  serviceInitGetDataOutA(req, function(data, err) {
+    if (err) {
+      res.status(500).send({ message: err });
+    }else {
+      res.status(200).send({ history: data.history });
+    }
+  });
+}
+
+function serviceInitGetDataOutA(req, next) {
+    var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.getDataOut+'';
+    axios.post(url, {
+        fid: req.body.fid
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+function getDataOutM(req, res){
+  serviceInitGetDataOutM(req, function(data, err) {
+    if (err) {
+      res.status(500).send({ message: err });
+    }else {
+      console.log(data);
+      res.status(200).send({ history: data.history });
+
+      //console.log(data);
+    }
+  });
+}
+
+function serviceInitGetDataOutM(req, next) {
+    var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.getDataOut+'';
+    //console.log(url);
+    axios.post(url, {
+        fid: req.body.fid
+    })
+    .then(response => {
+        //console.log(response.data);
+        next(response.data, null);
+    })
+    .catch(error => {
+        //console.log(error);
+        next(null, error.response.data.message);
+    });
+}
+
+
 function uploadImages(req, next) {
   if (req.files.vehiclePhotos == undefined && req.files.productPhotos == undefined || req.files.vehiclePhotos == 'undefined' && req.files.productPhotos == 'undefined') {
     //console.log("undefined for vehiclePhotos and productPhotos");
@@ -1443,6 +1499,8 @@ module.exports = {
   //traceabilityA,
   //traceabilityP,
   getData,
+  getDataOutA,
+  getDataOutM,
   getFileStream,
   getInitialNonce,
   verifyEmail,
