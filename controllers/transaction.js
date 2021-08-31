@@ -534,6 +534,14 @@ function serviceInitMerchants(req, next) {
 }
 
 function merchantsDataOut(req, res){
+  console.log(typeof req.body.quantity);
+  if (req.body.id == '' || req.body.quantity == '') {
+    res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
+    return;
+  }else if (req.body.quantity <= 0) {
+    res.status(400).send({ message: 'Cantidad no válida' });
+    return;
+  }
   uploadImages(req, function(imageName, err) {
       if (err) {
           res.status(500).send({ message: err });
@@ -819,6 +827,14 @@ function serviceInitAcopios(req, next) {
 }
 
 function acopiosDataOut(req, res){
+  console.log(typeof req.body.quantity);
+  if (req.body.id == '' || req.body.quantity == '') {
+    res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
+    return;
+  }else if (req.body.quantity <= 0) {
+    res.status(400).send({ message: 'Cantidad no válida' });
+    return;
+  }
   uploadImages(req, function(imageName, err) {
       if (err) {
           res.status(500).send({ message: err });
