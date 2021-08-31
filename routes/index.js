@@ -8,8 +8,7 @@ router.get('/images', TransactionController.getFileStream);
 router.get('/images/:id', TransactionController.getFileStream);
 
 router.get('/getData', TransactionController.getData);
-router.get('/getDataOutA', TransactionController.getDataOutA);
-router.get('/getDataOutM', TransactionController.getDataOutM);
+router.get('/getDataOut', TransactionController.getDataOut);
 
 
 router.post('/login', TransactionController.login);
