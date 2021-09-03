@@ -707,7 +707,7 @@ function serviceInitCarriers(req, next) {
     axios.post(url, {
       fid: req.body.fid,
       code: req.body.code,
-      ubication: req.body.ubication,
+      //ubication: req.body.ubication,
       name: req.body.name,
       previousStage: req.body.previousStage,
       currentStage: req.body.currentStage,
