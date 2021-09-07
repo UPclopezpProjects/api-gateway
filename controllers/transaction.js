@@ -261,7 +261,7 @@ async function getData(req, res) {
     //data.push(resMerchant.data.message);
 
     const resMerchantOut = await axios.get('http://'+host.merchantOut+':'+port.merchantOut+''+path.getData+'');
-    //data.push(resMerchant.data.message);
+    //data.push(resMerchantOut.data.message);
 
     const resCarrier = await axios.get('http://'+host.carrier+':'+port.carrier+''+path.getData+'');
     //data.push(resCarrier.data.message);
@@ -270,11 +270,11 @@ async function getData(req, res) {
     //data.push(resAcopio.data.message);
 
     const resAcopioOut = await axios.get('http://'+host.acopioOut+':'+port.acopioOut+''+path.getData+'');
-    //data.push(resAcopio.data.message);
+    //data.push(resAcopioOut.data.message);
 
     const resProductor = await axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
     //data.push(resProductor.data.message);
-    console.log(resMerchant);
+
     res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, acopioOut: resAcopioOut.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message, merchantOut: resMerchantOut.data.message });
   } catch (error) {
     //console.log(error);
@@ -1132,6 +1132,7 @@ function serviceInitGetCompanyP(req, next) {
 
 function productorsData(req, res){
   console.log(req.body);
+  console.log(req.files);
   uploadImages(req, function(imageName, err) {
       if (err) {
           res.status(500).send({ message: err });
