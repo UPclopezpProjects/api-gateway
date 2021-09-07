@@ -1134,6 +1134,9 @@ function serviceInitGetCompanyP(req, next) {
 
 function productorsData(req, res){
   console.log(req.body);
+  console.log(req.file);
+  console.log(req.files);
+
   uploadImages(req, function(imageName, err) {
       if (err) {
           res.status(500).send({ message: err });
