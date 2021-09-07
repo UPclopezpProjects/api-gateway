@@ -885,6 +885,7 @@ function acopiosDataOut(req, res){
             if (err) {
                 res.status(500).send({ message: err });
             }else {
+              console.log(data);
               if (data == true) {
                 serviceInitAcopiosOut(req, function(data, err) {
                     if (err) {
