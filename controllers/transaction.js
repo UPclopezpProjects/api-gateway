@@ -509,6 +509,7 @@ function serviceInitMerchantsCompany(req, next) {
     {
       headers: {
         'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
