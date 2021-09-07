@@ -390,7 +390,6 @@ function uploadImages(req, next) {
           next(null, error);
           //res.status(500).send(error);
         }else {
-          console.log(dataAWS);
           next(dataAWS.Key, null);
         }
       });
@@ -1138,7 +1137,7 @@ function productorsData(req, res){
       if (err) {
           res.status(500).send({ message: err });
       }else {
-        console.log(imageName);
+        //console.log(imageName);
         req.body.image = imageName;
         serviceInitProductors(req, function(data, err) {
             if (err) {
@@ -1153,6 +1152,7 @@ function productorsData(req, res){
 }
 
 function serviceInitProductors(req, next) {
+  console.log(req.body);
     var url = 'http://'+host.productor+':'+port.productor+''+path.productor+'';
     axios.post(url, {
       fid: req.body.fid,
