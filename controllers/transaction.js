@@ -376,7 +376,7 @@ function serviceInitGetDataOutM(req, next) {
 
 function uploadImages(req, next) {
   if (req.files.vehiclePhotos == undefined && req.files.productPhotos == undefined || req.files.vehiclePhotos == 'undefined' && req.files.productPhotos == 'undefined') {
-    //console.log("undefined for vehiclePhotos and productPhotos");
+    console.log("undefined for vehiclePhotos and productPhotos");
     for(var fileImage of req.files.image){
       let myFile = fileImage.originalname.split(".");
       const fileType = myFile[myFile.length - 1];
@@ -1133,10 +1133,6 @@ function serviceInitGetCompanyP(req, next) {
 }
 
 function productorsData(req, res){
-  console.log(req.body);
-  console.log(req.file);
-  console.log(req.files);
-
   uploadImages(req, function(imageName, err) {
       if (err) {
           res.status(500).send({ message: err });
