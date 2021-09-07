@@ -502,7 +502,13 @@ function serviceInitMerchantsCompany(req, next) {
     var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.merchantsCompany+'';
     axios.post(url, {
         email: req.body.email,
-        nameOfCompany: req.body.nameOfCompany
+        nameOfCompany: req.body.nameOfCompany,
+        typeOfOperation: 'create',
+        nameOfOperation: 'createData'
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
     })
     .then(response => {
         //console.log(response.data);
@@ -515,13 +521,21 @@ function serviceInitMerchantsCompany(req, next) {
 }
 
 function getCompanyM(req, res) {
-  serviceInitGetCompanyM(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ message: data.message, user: data.user });
-          //console.log(data);
-      }
+  serviceInitCheckPermission(req, function(dataPermit, err) {
+    if(data.message == true){
+      serviceInitGetCompanyM(req, function(data, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user });
+              //console.log(data);
+          }
+      });
+    }else if (data.message == false) {
+      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+    }else if(data.message == 'No existe la transacción') {
+      res.status(500).send({ message: data.message });
+    }
   });
 }
 
@@ -529,6 +543,10 @@ function serviceInitGetCompanyM(req, next) {
     var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.getCompanyM+'';
     axios.post(url, {
         email: req.body.email
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
     })
     .then(response => {
         //console.log(response.data);
@@ -708,7 +726,14 @@ function serviceInitCarriersCompany(req, next) {
     var url = 'http://'+host.carrier+':'+port.carrier+''+path.carriersCompany+'';
     axios.post(url, {
         email: req.body.email,
-        nameOfCompany: req.body.nameOfCompany
+        nameOfCompany: req.body.nameOfCompany,
+        typeOfOperation: 'create',
+        nameOfOperation: 'createData'
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -721,13 +746,21 @@ function serviceInitCarriersCompany(req, next) {
 }
 
 function getCompanyC(req, res) {
-  serviceInitGetCompanyC(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ message: data.message, user: data.user });
-          //console.log(data);
-      }
+  serviceInitCheckPermission(req, function(dataPermit, err) {
+    if(data.message == true){
+      serviceInitGetCompanyC(req, function(data, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user });
+              //console.log(data);
+          }
+      });
+    }else if (data.message == false) {
+      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+    }else if(data.message == 'No existe la transacción') {
+      res.status(500).send({ message: data.message });
+    }
   });
 }
 
@@ -819,7 +852,14 @@ function serviceInitAcopiosCompany(req, next) {
     var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.acopiosCompany+'';
     axios.post(url, {
         email: req.body.email,
-        nameOfCompany: req.body.nameOfCompany
+        nameOfCompany: req.body.nameOfCompany,
+        typeOfOperation: 'create',
+        nameOfOperation: 'createData'
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -832,13 +872,21 @@ function serviceInitAcopiosCompany(req, next) {
 }
 
 function getCompanyA(req, res) {
-  serviceInitGetCompanyA(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ message: data.message, user: data.user });
-          //console.log(data);
-      }
+  serviceInitCheckPermission(req, function(dataPermit, err) {
+    if(data.message == true){
+      serviceInitGetCompanyA(req, function(data, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user });
+              //console.log(data);
+          }
+      });
+    }else if (data.message == false) {
+      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+    }else if(data.message == 'No existe la transacción') {
+      res.status(500).send({ message: data.message });
+    }
   });
 }
 
@@ -1035,7 +1083,14 @@ function serviceInitProductorsCompany(req, next) {
     var url = 'http://'+host.productor+':'+port.productor+''+path.productorsCompany+'';
     axios.post(url, {
         email: req.body.email,
-        nameOfCompany: req.body.nameOfCompany
+        nameOfCompany: req.body.nameOfCompany,
+        typeOfOperation: 'create',
+        nameOfOperation: 'createData'
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -1048,13 +1103,21 @@ function serviceInitProductorsCompany(req, next) {
 }
 
 function getCompanyP(req, res) {
-  serviceInitGetCompanyP(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ message: data.message, user: data.user });
-          //console.log(data);
-      }
+  serviceInitCheckPermission(req, function(dataPermit, err) {
+    if(data.message == true){
+      serviceInitGetCompanyP(req, function(data, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user });
+              //console.log(data);
+          }
+      });
+    }else if (data.message == false) {
+      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+    }else if(data.message == 'No existe la transacción') {
+      res.status(500).send({ message: data.message });
+    }
   });
 }
 
