@@ -832,6 +832,7 @@ function serviceInitCarriers(req, next) {
 }
 
 function acopiosCompany(req, res) {
+  console.log(req.body);
   serviceInitAcopiosCompany(req, function(data, err) {
       if (err) {
           res.status(500).send({ message: err });
