@@ -596,7 +596,7 @@ function serviceInitMerchantsOut(req, next) {
         image: req.body.image,
         description: req.body.description,
         quantity: req.body.quantity,
-        departureDate: req.body.departureDate,,
+        departureDate: req.body.departureDate,
         typeOfOperation: 'create',
         nameOfOperation: 'createData'
     },
