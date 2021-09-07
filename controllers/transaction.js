@@ -534,7 +534,7 @@ function serviceInitMerchants(req, next) {
         quantity: req.body.quantity,
         typeOfOperation: req.body.typeOfOperation,
         nameOfOperation: req.body.nameOfOperation
-    }),
+    },
     {
       headers: {
         'Authorization': req.headers.authorization
@@ -603,7 +603,7 @@ function serviceInitMerchantsOut(req, next) {
         departureDate: req.body.departureDate,
         typeOfOperation: req.body.typeOfOperation,
         nameOfOperation: req.body.nameOfOperation
-    }),
+    },
     {
       headers: {
         'Authorization': req.headers.authorization
@@ -637,7 +637,7 @@ function serviceInitMerchantsUpdate(req, next) {
   axios.put(url, {
     id: req.body.fid,
     quantity: req.body.quantity
-  }),
+  },
   {
     headers: {
       'Authorization': req.headers.authorization
@@ -750,7 +750,7 @@ function serviceInitCarriers(req, next) {
       tracking: req.body.tracking,
       typeOfOperation: req.body.typeOfOperation,
       nameOfOperation: req.body.nameOfOperation
-    }),
+    },
     {
       headers: {
         'Authorization': req.headers.authorization
@@ -860,7 +860,7 @@ function serviceInitAcopios(req, next) {
     //whoDelivers: req.body.whoDelivers
     typeOfOperation: req.body.typeOfOperation,
     nameOfOperation: req.body.nameOfOperation
-  }),
+  },
   {
     headers: {
       'Authorization': req.headers.authorization
@@ -935,7 +935,7 @@ function serviceInitAcopiosOut(req, next) {
     whoDelivers: req.body.whoDelivers,
     typeOfOperation: req.body.typeOfOperation,
     nameOfOperation: req.body.nameOfOperation
-  }),
+  },
   {
     headers: {
       'Authorization': req.headers.authorization
@@ -968,7 +968,7 @@ function serviceInitAcopiosUpdate(req, next) {
   axios.put(url, {
     id: req.body.fid,
     quantity: req.body.quantity
-  }),
+  },
   {
     headers: {
       'Authorization': req.headers.authorization
@@ -1076,7 +1076,7 @@ function serviceInitProductors(req, next) {
       nameOfCompany: req.body.nameOfCompany,
       typeOfOperation: req.body.typeOfOperation,
       nameOfOperation: req.body.nameOfOperation
-    }),
+    },
     {
       headers: {
         'Authorization': req.headers.authorization
