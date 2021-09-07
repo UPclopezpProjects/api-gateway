@@ -517,8 +517,6 @@ function merchantsData(req, res){
 }
 
 function serviceInitMerchants(req, next) {
-  req.body.typeOfOperation = 'create';
-  req.body.nameOfOperation = 'createData';
     var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.merchantIn+'';
     axios.post(url, {
         fid: req.body.fid,
@@ -532,8 +530,8 @@ function serviceInitMerchants(req, next) {
         description: req.body.description,
         arrivalDate: req.body.arrivalDate,
         quantity: req.body.quantity,
-        typeOfOperation: req.body.typeOfOperation,
-        nameOfOperation: req.body.nameOfOperation
+        typeOfOperation: 'create',
+        nameOfOperation: 'createData'
     },
     {
       headers: {
@@ -586,8 +584,6 @@ function merchantsDataOut(req, res){
 }
 
 function serviceInitMerchantsOut(req, next) {
-  req.body.typeOfOperation = 'create';
-  req.body.nameOfOperation = 'createData';
     var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.merchantOut+'';
     axios.post(url, {
         fid: req.body.fid,
@@ -600,9 +596,9 @@ function serviceInitMerchantsOut(req, next) {
         image: req.body.image,
         description: req.body.description,
         quantity: req.body.quantity,
-        departureDate: req.body.departureDate,
-        typeOfOperation: req.body.typeOfOperation,
-        nameOfOperation: req.body.nameOfOperation
+        departureDate: req.body.departureDate,,
+        typeOfOperation: 'create',
+        nameOfOperation: 'createData'
     },
     {
       headers: {
@@ -620,8 +616,6 @@ function serviceInitMerchantsOut(req, next) {
 }
 
 function updateTransactionM(req, next){
-  req.body.typeOfOperation = 'update';
-  req.body.nameOfOperation = 'updateData';
   serviceInitMerchantsUpdate(req, function(data, err) {
     if (err) {
       next(null, err);
@@ -636,9 +630,9 @@ function serviceInitMerchantsUpdate(req, next) {
   var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.merchantsDataUpdate+'';
   axios.put(url, {
     id: req.body.fid,
-    quantity: req.body.quantity,
-    typeOfOperation: req.body.typeOfOperation,
-    nameOfOperation: req.body.nameOfOperation
+    quantity: req.body.quantity,,
+    typeOfOperation: 'update',
+    nameOfOperation: 'updateData'
   },
   {
     headers: {
@@ -730,8 +724,6 @@ function carriersData(req, res){
 }
 
 function serviceInitCarriers(req, next) {
-  req.body.typeOfOperation = 'create';
-  req.body.nameOfOperation = 'createData';
     var url = 'http://'+host.carrier+':'+port.carrier+''+path.carrier+'';
     axios.post(url, {
       fid: req.body.fid,
@@ -749,9 +741,9 @@ function serviceInitCarriers(req, next) {
       plates: req.body.plates,
       productPhotos: req.body.productPhotos,
       vehiclePhotos: req.body.vehiclePhotos,
-      tracking: req.body.tracking,
-      typeOfOperation: req.body.typeOfOperation,
-      nameOfOperation: req.body.nameOfOperation
+      tracking: req.body.tracking,,
+      typeOfOperation: 'create',
+      nameOfOperation: 'createData'
     },
     {
       headers: {
@@ -840,8 +832,6 @@ function acopiosData(req, res){
 }
 
 function serviceInitAcopios(req, next) {
-  req.body.typeOfOperation = 'create';
-  req.body.nameOfOperation = 'createData';
   var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.acopioIn+'';
   axios.post(url, {
     fid: req.body.fid,
@@ -859,9 +849,9 @@ function serviceInitAcopios(req, next) {
     quantity: req.body.quantity,
     measure: req.body.measure,
     whoReceives: req.body.whoReceives,
-    //whoDelivers: req.body.whoDelivers
-    typeOfOperation: req.body.typeOfOperation,
-    nameOfOperation: req.body.nameOfOperation
+    //whoDelivers: req.body.whoDelivers,
+    typeOfOperation: 'create',
+    nameOfOperation: 'createData'
   },
   {
     headers: {
@@ -915,8 +905,6 @@ function acopiosDataOut(req, res){
 }
 
 function serviceInitAcopiosOut(req, next) {
-  req.body.typeOfOperation = 'create';
-  req.body.nameOfOperation = 'createData';
   var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.acopioOut+'';
   axios.post(url, {
     fid: req.body.fid,
@@ -934,9 +922,9 @@ function serviceInitAcopiosOut(req, next) {
     quantity: req.body.quantity,
     measure: req.body.measure,
     //whoReceives: req.body.whoReceives,
-    whoDelivers: req.body.whoDelivers,
-    typeOfOperation: req.body.typeOfOperation,
-    nameOfOperation: req.body.nameOfOperation
+    whoDelivers: req.body.whoDelivers,,
+    typeOfOperation: 'create',
+    nameOfOperation: 'createData'
   },
   {
     headers: {
@@ -954,8 +942,6 @@ function serviceInitAcopiosOut(req, next) {
 }
 
 function updateTransactionA(req, next){
-  req.body.typeOfOperation = 'update';
-  req.body.nameOfOperation = 'updateData';
   serviceInitAcopiosUpdate(req, function(data, err) {
     if (err) {
       next(null, err);
@@ -969,9 +955,9 @@ function serviceInitAcopiosUpdate(req, next) {
   var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.acopiosDataUpdate+'';
   axios.put(url, {
     id: req.body.fid,
-    quantity: req.body.quantity,
-    typeOfOperation: req.body.typeOfOperation,
-    nameOfOperation: req.body.nameOfOperation
+    quantity: req.body.quantity,,
+    typeOfOperation: 'update',
+    nameOfOperation: 'updateData'
   },
   {
     headers: {
@@ -1062,8 +1048,6 @@ function productorsData(req, res){
 }
 
 function serviceInitProductors(req, next) {
-  req.body.typeOfOperation = 'create';
-  req.body.nameOfOperation = 'createData';
     var url = 'http://'+host.productor+':'+port.productor+''+path.productor+'';
     axios.post(url, {
       fid: req.body.fid,
@@ -1077,9 +1061,9 @@ function serviceInitProductors(req, next) {
       description: req.body.description,
       image: req.body.image,
       documentation: req.body.documentation,
-      nameOfCompany: req.body.nameOfCompany,
-      typeOfOperation: req.body.typeOfOperation,
-      nameOfOperation: req.body.nameOfOperation
+      nameOfCompany: req.body.nameOfCompany,,
+      typeOfOperation: 'create',
+      nameOfOperation: 'createData'
     },
     {
       headers: {
