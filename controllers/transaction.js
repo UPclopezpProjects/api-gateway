@@ -54,7 +54,7 @@ function getHistory(req, res) {
       }
 
     }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+      res.status(500).send({ message: 'No tienes permisos para ver datos' });
     }else if(dataPermit.message == 'No existe la transacción') {
       res.status(500).send({ message: dataPermit.message });
     }
@@ -283,7 +283,7 @@ function getData(req, res) {
         res.status(400).send({ message: error });
       }
     }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+      res.status(500).send({ message: 'No tienes permisos para ver datos' });
     }else if(dataPermit.message == 'No existe la transacción') {
       res.status(500).send({ message: dataPermit.message });
     }
@@ -326,7 +326,7 @@ function getDataOut(req, res){
         res.status(500).send({ message: "NO EXISTE PARA PRODUCTOR" });
       }
     }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+      res.status(500).send({ message: 'No tienes permisos para ver datos' });
     }else if(dataPermit.message == 'No existe la transacción') {
       res.status(500).send({ message: dataPermit.message });
     }
@@ -533,7 +533,7 @@ function getCompanyM(req, res) {
           }
       });
     }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+      res.status(500).send({ message: 'No tienes permisos para ver datos' });
     }else if(dataPermit.message == 'No existe la transacción') {
       res.status(500).send({ message: dataPermit.message });
     }
@@ -759,7 +759,7 @@ function getCompanyC(req, res) {
           }
       });
     }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+      res.status(500).send({ message: 'No tienes permisos para ver datos' });
     }else if(dataPermit.message == 'No existe la transacción') {
       res.status(500).send({ message: dataPermit.message });
     }
@@ -885,7 +885,7 @@ function getCompanyA(req, res) {
           }
       });
     }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+      res.status(500).send({ message: 'No tienes permisos para ver datos' });
     }else if(dataPermit.message == 'No existe la transacción') {
       res.status(500).send({ message: dataPermit.message });
     }
@@ -1116,7 +1116,7 @@ function getCompanyP(req, res) {
           }
       });
     }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+      res.status(500).send({ message: 'No tienes permisos para ver datos' });
     }else if(dataPermit.message == 'No existe la transacción') {
       res.status(500).send({ message: dataPermit.message });
     }
