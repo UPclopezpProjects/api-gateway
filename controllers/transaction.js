@@ -16,7 +16,7 @@ const s3 = new AWS.S3({
 
 function getHistory(req, res) {
   serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(data.message == true){
+    if(dataPermit.message == true){
       var typeOfUser = req.query.typeOfUser;
       if(typeOfUser == 'Merchant'){
         serviceInitHistoryM(req, function(data, err) {
@@ -53,10 +53,10 @@ function getHistory(req, res) {
         });
       }
 
-    }else if (data.message == false) {
+    }else if (dataPermit.message == false) {
       res.status(500).send({ message: 'No tienes permisos para agregar datos' });
-    }else if(data.message == 'No existe la transacción') {
-      res.status(500).send({ message: data.message });
+    }else if(dataPermit.message == 'No existe la transacción') {
+      res.status(500).send({ message: dataPermit.message });
     }
   });
 }
@@ -256,7 +256,7 @@ function serviceInitTraceabilityP(req, next) {
 */
 function getData(req, res) {
   serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(data.message == true){
+    if(dataPermit.message == true){
       try {
         //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});  productor: '/productorsData',
         const resMerchant = axios.get('http://'+host.merchantIn+':'+port.merchantIn+''+path.getData+'');
@@ -282,17 +282,17 @@ function getData(req, res) {
         //console.log(error);
         res.status(400).send({ message: error });
       }
-    }else if (data.message == false) {
+    }else if (dataPermit.message == false) {
       res.status(500).send({ message: 'No tienes permisos para agregar datos' });
-    }else if(data.message == 'No existe la transacción') {
-      res.status(500).send({ message: data.message });
+    }else if(dataPermit.message == 'No existe la transacción') {
+      res.status(500).send({ message: dataPermit.message });
     }
   });
 }
 
 function getDataOut(req, res){
   serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(data.message == true){
+    if(dataPermit.message == true){
       var typeOfUser = req.query.typeOfUser;
       if(typeOfUser == 'Merchant'){
         serviceInitGetDataOutM(req, function(data, err) {
@@ -325,10 +325,10 @@ function getDataOut(req, res){
         console.log("EN PRODUCTOR NO HAY");
         res.status(500).send({ message: "NO EXISTE PARA PRODUCTOR" });
       }
-    }else if (data.message == false) {
+    }else if (dataPermit.message == false) {
       res.status(500).send({ message: 'No tienes permisos para agregar datos' });
-    }else if(data.message == 'No existe la transacción') {
-      res.status(500).send({ message: data.message });
+    }else if(dataPermit.message == 'No existe la transacción') {
+      res.status(500).send({ message: dataPermit.message });
     }
   });
 }
@@ -523,7 +523,7 @@ function serviceInitMerchantsCompany(req, next) {
 
 function getCompanyM(req, res) {
   serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(data.message == true){
+    if(dataPermit.message == true){
       serviceInitGetCompanyM(req, function(data, err) {
           if (err) {
               res.status(500).send({ message: err });
@@ -532,10 +532,10 @@ function getCompanyM(req, res) {
               //console.log(data);
           }
       });
-    }else if (data.message == false) {
+    }else if (dataPermit.message == false) {
       res.status(500).send({ message: 'No tienes permisos para agregar datos' });
-    }else if(data.message == 'No existe la transacción') {
-      res.status(500).send({ message: data.message });
+    }else if(dataPermit.message == 'No existe la transacción') {
+      res.status(500).send({ message: dataPermit.message });
     }
   });
 }
@@ -749,7 +749,7 @@ function serviceInitCarriersCompany(req, next) {
 
 function getCompanyC(req, res) {
   serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(data.message == true){
+    if(dataPermit.message == true){
       serviceInitGetCompanyC(req, function(data, err) {
           if (err) {
               res.status(500).send({ message: err });
@@ -758,10 +758,10 @@ function getCompanyC(req, res) {
               //console.log(data);
           }
       });
-    }else if (data.message == false) {
+    }else if (dataPermit.message == false) {
       res.status(500).send({ message: 'No tienes permisos para agregar datos' });
-    }else if(data.message == 'No existe la transacción') {
-      res.status(500).send({ message: data.message });
+    }else if(dataPermit.message == 'No existe la transacción') {
+      res.status(500).send({ message: dataPermit.message });
     }
   });
 }
@@ -875,7 +875,7 @@ function serviceInitAcopiosCompany(req, next) {
 
 function getCompanyA(req, res) {
   serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(data.message == true){
+    if(dataPermit.message == true){
       serviceInitGetCompanyA(req, function(data, err) {
           if (err) {
               res.status(500).send({ message: err });
@@ -884,10 +884,10 @@ function getCompanyA(req, res) {
               //console.log(data);
           }
       });
-    }else if (data.message == false) {
+    }else if (dataPermit.message == false) {
       res.status(500).send({ message: 'No tienes permisos para agregar datos' });
-    }else if(data.message == 'No existe la transacción') {
-      res.status(500).send({ message: data.message });
+    }else if(dataPermit.message == 'No existe la transacción') {
+      res.status(500).send({ message: dataPermit.message });
     }
   });
 }
@@ -1106,7 +1106,7 @@ function serviceInitProductorsCompany(req, next) {
 
 function getCompanyP(req, res) {
   serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(data.message == true){
+    if(dataPermit.message == true){
       serviceInitGetCompanyP(req, function(data, err) {
           if (err) {
               res.status(500).send({ message: err });
@@ -1115,10 +1115,10 @@ function getCompanyP(req, res) {
               //console.log(data);
           }
       });
-    }else if (data.message == false) {
+    }else if (dataPermit.message == false) {
       res.status(500).send({ message: 'No tienes permisos para agregar datos' });
-    }else if(data.message == 'No existe la transacción') {
-      res.status(500).send({ message: data.message });
+    }else if(dataPermit.message == 'No existe la transacción') {
+      res.status(500).send({ message: dataPermit.message });
     }
   });
 }
