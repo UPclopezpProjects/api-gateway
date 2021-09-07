@@ -577,7 +577,7 @@ function merchantsDataOut(req, res){
               }else if(data == false) {
                 res.status(400).send({ message: 'No hay stock' });
               }else {
-                res.status(400).send({ message: data.message });
+                res.status(400).send({ message: data });
               }
             }
         });
@@ -899,7 +899,7 @@ function acopiosDataOut(req, res){
               }else if(data == false) {
                 res.status(400).send({ message: 'No hay stock' });
               }else {
-                res.status(400).send({ message: data.message });
+                res.status(400).send({ message: data });
               }
             }
         });
