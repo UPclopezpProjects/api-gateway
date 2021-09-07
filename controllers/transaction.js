@@ -390,6 +390,7 @@ function uploadImages(req, next) {
           next(null, error);
           //res.status(500).send(error);
         }else {
+          console.log(dataAWS);
           next(dataAWS.Key, null);
         }
       });
@@ -1137,7 +1138,7 @@ function productorsData(req, res){
       if (err) {
           res.status(500).send({ message: err });
       }else {
-        //console.log(imageName);
+        console.log(imageName);
         req.body.image = imageName;
         serviceInitProductors(req, function(data, err) {
             if (err) {
