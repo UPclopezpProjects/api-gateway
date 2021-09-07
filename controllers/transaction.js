@@ -636,7 +636,9 @@ function serviceInitMerchantsUpdate(req, next) {
   var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.merchantsDataUpdate+'';
   axios.put(url, {
     id: req.body.fid,
-    quantity: req.body.quantity
+    quantity: req.body.quantity,
+    typeOfOperation: req.body.typeOfOperation,
+    nameOfOperation: req.body.nameOfOperation
   },
   {
     headers: {
@@ -967,7 +969,9 @@ function serviceInitAcopiosUpdate(req, next) {
   var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.acopiosDataUpdate+'';
   axios.put(url, {
     id: req.body.fid,
-    quantity: req.body.quantity
+    quantity: req.body.quantity,
+    typeOfOperation: req.body.typeOfOperation,
+    nameOfOperation: req.body.nameOfOperation
   },
   {
     headers: {
