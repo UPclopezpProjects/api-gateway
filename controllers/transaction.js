@@ -517,6 +517,8 @@ function merchantsData(req, res){
 }
 
 function serviceInitMerchants(req, next) {
+  req.body.typeOfOperation = 'create';
+  req.body.nameOfOperation = 'createData';
     var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.merchantIn+'';
     axios.post(url, {
         fid: req.body.fid,
@@ -529,7 +531,9 @@ function serviceInitMerchants(req, next) {
         image: req.body.image,
         description: req.body.description,
         arrivalDate: req.body.arrivalDate,
-        quantity: req.body.quantity
+        quantity: req.body.quantity,
+        typeOfOperation: req.body.typeOfOperation,
+        nameOfOperation: req.body.nameOfOperation
     })
     .then(response => {
         //console.log(response.data);
@@ -577,6 +581,8 @@ function merchantsDataOut(req, res){
 }
 
 function serviceInitMerchantsOut(req, next) {
+  req.body.typeOfOperation = 'create';
+  req.body.nameOfOperation = 'createData';
     var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.merchantOut+'';
     axios.post(url, {
         fid: req.body.fid,
@@ -589,7 +595,9 @@ function serviceInitMerchantsOut(req, next) {
         image: req.body.image,
         description: req.body.description,
         quantity: req.body.quantity,
-        departureDate: req.body.departureDate
+        departureDate: req.body.departureDate,
+        typeOfOperation: req.body.typeOfOperation,
+        nameOfOperation: req.body.nameOfOperation
     })
     .then(response => {
         //console.log(response.data);
@@ -602,6 +610,8 @@ function serviceInitMerchantsOut(req, next) {
 }
 
 function updateTransactionM(req, next){
+  req.body.typeOfOperation = 'update';
+  req.body.nameOfOperation = 'updateData';
   serviceInitMerchantsUpdate(req, function(data, err) {
     if (err) {
       next(null, err);
@@ -703,6 +713,8 @@ function carriersData(req, res){
 }
 
 function serviceInitCarriers(req, next) {
+  req.body.typeOfOperation = 'create';
+  req.body.nameOfOperation = 'createData';
     var url = 'http://'+host.carrier+':'+port.carrier+''+path.carrier+'';
     axios.post(url, {
       fid: req.body.fid,
@@ -720,7 +732,9 @@ function serviceInitCarriers(req, next) {
       plates: req.body.plates,
       productPhotos: req.body.productPhotos,
       vehiclePhotos: req.body.vehiclePhotos,
-      tracking: req.body.tracking
+      tracking: req.body.tracking,
+      typeOfOperation: req.body.typeOfOperation,
+      nameOfOperation: req.body.nameOfOperation
     })
     .then(response => {
         //console.log(response.data);
@@ -804,6 +818,8 @@ function acopiosData(req, res){
 }
 
 function serviceInitAcopios(req, next) {
+  req.body.typeOfOperation = 'create';
+  req.body.nameOfOperation = 'createData';
   var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.acopioIn+'';
   axios.post(url, {
     fid: req.body.fid,
@@ -822,6 +838,8 @@ function serviceInitAcopios(req, next) {
     measure: req.body.measure,
     whoReceives: req.body.whoReceives,
     //whoDelivers: req.body.whoDelivers
+    typeOfOperation: req.body.typeOfOperation,
+    nameOfOperation: req.body.nameOfOperation
   })
   .then(response => {
     //console.log(response.data);
@@ -870,6 +888,8 @@ function acopiosDataOut(req, res){
 }
 
 function serviceInitAcopiosOut(req, next) {
+  req.body.typeOfOperation = 'create';
+  req.body.nameOfOperation = 'createData';
   var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.acopioOut+'';
   axios.post(url, {
     fid: req.body.fid,
@@ -887,7 +907,9 @@ function serviceInitAcopiosOut(req, next) {
     quantity: req.body.quantity,
     measure: req.body.measure,
     //whoReceives: req.body.whoReceives,
-    whoDelivers: req.body.whoDelivers
+    whoDelivers: req.body.whoDelivers,
+    typeOfOperation: req.body.typeOfOperation,
+    nameOfOperation: req.body.nameOfOperation
   })
   .then(response => {
     //console.log(response.data);
@@ -900,6 +922,8 @@ function serviceInitAcopiosOut(req, next) {
 }
 
 function updateTransactionA(req, next){
+  req.body.typeOfOperation = 'update';
+  req.body.nameOfOperation = 'updateData';
   serviceInitAcopiosUpdate(req, function(data, err) {
     if (err) {
       next(null, err);
@@ -999,6 +1023,8 @@ function productorsData(req, res){
 }
 
 function serviceInitProductors(req, next) {
+  req.body.typeOfOperation = 'create';
+  req.body.nameOfOperation = 'createData';
     var url = 'http://'+host.productor+':'+port.productor+''+path.productor+'';
     axios.post(url, {
       fid: req.body.fid,
@@ -1013,6 +1039,8 @@ function serviceInitProductors(req, next) {
       image: req.body.image,
       documentation: req.body.documentation,
       nameOfCompany: req.body.nameOfCompany,
+      typeOfOperation: req.body.typeOfOperation,
+      nameOfOperation: req.body.nameOfOperation
     })
     .then(response => {
         //console.log(response.data);
