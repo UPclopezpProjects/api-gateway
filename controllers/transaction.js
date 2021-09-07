@@ -740,6 +740,7 @@ function serviceInitCarriersCompany(req, next) {
 }
 
 function getCompanyC(req, res) {
+  console.log(req.body);
   serviceInitCheckPermission(req, function(dataPermit, err) {
     if(dataPermit.message == true){
       serviceInitGetCompanyC(req, function(data, err) {
