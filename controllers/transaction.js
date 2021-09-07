@@ -260,22 +260,22 @@ function getData(req, res) {
       try {
         //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});  productor: '/productorsData',
         const resMerchant = axios.get('http://'+host.merchantIn+':'+port.merchantIn+''+path.getData+'');
-        //data.push(resMerchant.data.message);
+        data.push(resMerchant.data.message);
 
         const resMerchantOut = axios.get('http://'+host.merchantOut+':'+port.merchantOut+''+path.getData+'');
-        //data.push(resMerchant.data.message);
+        data.push(resMerchantOut.data.message);
 
         const resCarrier = axios.get('http://'+host.carrier+':'+port.carrier+''+path.getData+'');
-        //data.push(resCarrier.data.message);
+        data.push(resCarrier.data.message);
 
         const resAcopio = axios.get('http://'+host.acopioIn+':'+port.acopioIn+''+path.getData+'');
-        //data.push(resAcopio.data.message);
+        data.push(resAcopio.data.message);
 
         const resAcopioOut = axios.get('http://'+host.acopioOut+':'+port.acopioOut+''+path.getData+'');
-        //data.push(resAcopio.data.message);
+        data.push(resAcopioOut.data.message);
 
         const resProductor = axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
-        //data.push(resProductor.data.message);
+        data.push(resProductor.data.message);
         //console.log(resProductor, resAcopio, resAcopioOut, resCarrier, resMerchant, resMerchantOut);
         res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, acopioOut: resAcopioOut.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message, merchantOut: resMerchantOut.data.message });
       } catch (error) {
