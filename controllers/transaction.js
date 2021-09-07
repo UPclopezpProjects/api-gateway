@@ -576,6 +576,8 @@ function merchantsDataOut(req, res){
                 });
               }else if(data == false) {
                 res.status(400).send({ message: 'No hay stock' });
+              }else {
+                res.status(400).send({ message: data.message });
               }
             }
         });
@@ -885,7 +887,6 @@ function acopiosDataOut(req, res){
             if (err) {
                 res.status(500).send({ message: err });
             }else {
-              console.log(data);
               if (data == true) {
                 serviceInitAcopiosOut(req, function(data, err) {
                     if (err) {
@@ -897,6 +898,8 @@ function acopiosDataOut(req, res){
                 });
               }else if(data == false) {
                 res.status(400).send({ message: 'No hay stock' });
+              }else {
+                res.status(400).send({ message: data.message });
               }
             }
         });
