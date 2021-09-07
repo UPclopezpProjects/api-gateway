@@ -630,7 +630,7 @@ function serviceInitMerchantsUpdate(req, next) {
   var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.merchantsDataUpdate+'';
   axios.put(url, {
     id: req.body.fid,
-    quantity: req.body.quantity,,
+    quantity: req.body.quantity,
     typeOfOperation: 'update',
     nameOfOperation: 'updateData'
   },
@@ -741,7 +741,7 @@ function serviceInitCarriers(req, next) {
       plates: req.body.plates,
       productPhotos: req.body.productPhotos,
       vehiclePhotos: req.body.vehiclePhotos,
-      tracking: req.body.tracking,,
+      tracking: req.body.tracking,
       typeOfOperation: 'create',
       nameOfOperation: 'createData'
     },
@@ -922,7 +922,7 @@ function serviceInitAcopiosOut(req, next) {
     quantity: req.body.quantity,
     measure: req.body.measure,
     //whoReceives: req.body.whoReceives,
-    whoDelivers: req.body.whoDelivers,,
+    whoDelivers: req.body.whoDelivers,
     typeOfOperation: 'create',
     nameOfOperation: 'createData'
   },
@@ -955,7 +955,7 @@ function serviceInitAcopiosUpdate(req, next) {
   var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.acopiosDataUpdate+'';
   axios.put(url, {
     id: req.body.fid,
-    quantity: req.body.quantity,,
+    quantity: req.body.quantity,
     typeOfOperation: 'update',
     nameOfOperation: 'updateData'
   },
@@ -1061,7 +1061,7 @@ function serviceInitProductors(req, next) {
       description: req.body.description,
       image: req.body.image,
       documentation: req.body.documentation,
-      nameOfCompany: req.body.nameOfCompany,,
+      nameOfCompany: req.body.nameOfCompany,
       typeOfOperation: 'create',
       nameOfOperation: 'createData'
     },
