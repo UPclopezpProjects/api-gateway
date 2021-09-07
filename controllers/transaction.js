@@ -254,27 +254,27 @@ function serviceInitTraceabilityP(req, next) {
     });
 }
 */
-async function getData(req, res) {
+function getData(req, res) {
   serviceInitCheckPermission(req, function(dataPermit, err) {
     if(data.message == true){
       try {
         //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});  productor: '/productorsData',
-        const resMerchant = await axios.get('http://'+host.merchantIn+':'+port.merchantIn+''+path.getData+'');
+        const resMerchant = axios.get('http://'+host.merchantIn+':'+port.merchantIn+''+path.getData+'');
         //data.push(resMerchant.data.message);
 
-        const resMerchantOut = await axios.get('http://'+host.merchantOut+':'+port.merchantOut+''+path.getData+'');
+        const resMerchantOut = axios.get('http://'+host.merchantOut+':'+port.merchantOut+''+path.getData+'');
         //data.push(resMerchant.data.message);
 
-        const resCarrier = await axios.get('http://'+host.carrier+':'+port.carrier+''+path.getData+'');
+        const resCarrier = axios.get('http://'+host.carrier+':'+port.carrier+''+path.getData+'');
         //data.push(resCarrier.data.message);
 
-        const resAcopio = await axios.get('http://'+host.acopioIn+':'+port.acopioIn+''+path.getData+'');
+        const resAcopio = axios.get('http://'+host.acopioIn+':'+port.acopioIn+''+path.getData+'');
         //data.push(resAcopio.data.message);
 
-        const resAcopioOut = await axios.get('http://'+host.acopioOut+':'+port.acopioOut+''+path.getData+'');
+        const resAcopioOut = axios.get('http://'+host.acopioOut+':'+port.acopioOut+''+path.getData+'');
         //data.push(resAcopio.data.message);
 
-        const resProductor = await axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
+        const resProductor = axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
         //data.push(resProductor.data.message);
         //console.log(resProductor, resAcopio, resAcopioOut, resCarrier, resMerchant, resMerchantOut);
         res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, acopioOut: resAcopioOut.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message, merchantOut: resMerchantOut.data.message });
