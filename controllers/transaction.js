@@ -534,6 +534,11 @@ function serviceInitMerchants(req, next) {
         quantity: req.body.quantity,
         typeOfOperation: req.body.typeOfOperation,
         nameOfOperation: req.body.nameOfOperation
+    }),
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -598,6 +603,11 @@ function serviceInitMerchantsOut(req, next) {
         departureDate: req.body.departureDate,
         typeOfOperation: req.body.typeOfOperation,
         nameOfOperation: req.body.nameOfOperation
+    }),
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -627,6 +637,11 @@ function serviceInitMerchantsUpdate(req, next) {
   axios.put(url, {
     id: req.body.fid,
     quantity: req.body.quantity
+  }),
+  {
+    headers: {
+      'Authorization': req.headers.authorization
+    }
   })
   .then(response => {
     //console.log(response.data);
@@ -735,6 +750,11 @@ function serviceInitCarriers(req, next) {
       tracking: req.body.tracking,
       typeOfOperation: req.body.typeOfOperation,
       nameOfOperation: req.body.nameOfOperation
+    }),
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -840,6 +860,11 @@ function serviceInitAcopios(req, next) {
     //whoDelivers: req.body.whoDelivers
     typeOfOperation: req.body.typeOfOperation,
     nameOfOperation: req.body.nameOfOperation
+  }),
+  {
+    headers: {
+      'Authorization': req.headers.authorization
+    }
   })
   .then(response => {
     //console.log(response.data);
@@ -910,6 +935,11 @@ function serviceInitAcopiosOut(req, next) {
     whoDelivers: req.body.whoDelivers,
     typeOfOperation: req.body.typeOfOperation,
     nameOfOperation: req.body.nameOfOperation
+  }),
+  {
+    headers: {
+      'Authorization': req.headers.authorization
+    }
   })
   .then(response => {
     //console.log(response.data);
@@ -938,6 +968,11 @@ function serviceInitAcopiosUpdate(req, next) {
   axios.put(url, {
     id: req.body.fid,
     quantity: req.body.quantity
+  }),
+  {
+    headers: {
+      'Authorization': req.headers.authorization
+    }
   })
   .then(response => {
     //console.log(response.data);
@@ -1041,6 +1076,11 @@ function serviceInitProductors(req, next) {
       nameOfCompany: req.body.nameOfCompany,
       typeOfOperation: req.body.typeOfOperation,
       nameOfOperation: req.body.nameOfOperation
+    }),
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
