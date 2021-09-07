@@ -276,7 +276,7 @@ function getData(req, res) {
 
         const resProductor = axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
         //data.push(resProductor.data.message);
-        console.log(resProductor.data.message, resAcopio.data.message, resAcopioOut.data.message, resCarrier.data.message, resMerchant.data.message, resMerchantOut.data.message);
+        console.log(resMerchant);
         res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, acopioOut: resAcopioOut.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message, merchantOut: resMerchantOut.data.message });
       } catch (error) {
         //console.log(error);
