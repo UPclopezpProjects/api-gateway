@@ -15,41 +15,50 @@ const s3 = new AWS.S3({
 });
 
 function getHistory(req, res) {
-  var typeOfUser = req.query.typeOfUser;
-  if(typeOfUser == 'Merchant'){
-    serviceInitHistoryM(req, function(data, err) {
-      if (err) {
-        res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ history: data.history });
+  serviceInitCheckPermission(req, function(dataPermit, err) {
+    if(data.message == true){
+      var typeOfUser = req.query.typeOfUser;
+      if(typeOfUser == 'Merchant'){
+        serviceInitHistoryM(req, function(data, err) {
+          if (err) {
+            res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ history: data.history });
+          }
+        });
+      } else if(typeOfUser == 'Carrier'){
+        serviceInitHistoryC(req, function(data, err) {
+          if (err) {
+            res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ history: data.history });
+          }
+        });
+      } else if(typeOfUser == 'Acopio'){
+        serviceInitHistoryA(req, function(data, err) {
+          if (err) {
+            res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ history: data.history });
+          }
+        });
+      } else if(typeOfUser == 'Productor'){
+        //console.log('toy');
+        serviceInitHistoryP(req, function(data, err) {
+          if (err) {
+            res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ history: data.history });
+          }
+        });
       }
-    });
-  } else if(typeOfUser == 'Carrier'){
-    serviceInitHistoryC(req, function(data, err) {
-      if (err) {
-        res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ history: data.history });
-      }
-    });
-  } else if(typeOfUser == 'Acopio'){
-    serviceInitHistoryA(req, function(data, err) {
-      if (err) {
-        res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ history: data.history });
-      }
-    });
-  } else if(typeOfUser == 'Productor'){
-    //console.log('toy');
-    serviceInitHistoryP(req, function(data, err) {
-      if (err) {
-        res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ history: data.history });
-      }
-    });
-  }
+
+    }else if (data.message == false) {
+      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+    }else if(data.message == 'No existe la transacción') {
+      res.status(500).send({ message: data.message });
+    }
+  });
 }
 
 function serviceInitHistoryM(req, next) {
@@ -246,66 +255,99 @@ function serviceInitTraceabilityP(req, next) {
 }
 */
 async function getData(req, res) {
-  try {
-    //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});  productor: '/productorsData',
-    const resMerchant = await axios.get('http://'+host.merchantIn+':'+port.merchantIn+''+path.getData+'');
-    //data.push(resMerchant.data.message);
+  serviceInitCheckPermission(req, function(dataPermit, err) {
+    if(data.message == true){
+      try {
+        //const resMerchant = await axios.post(`http://host.docker.internal:3002/getData/?code=${split[3]}`, { code: split[3]});  productor: '/productorsData',
+        const resMerchant = await axios.get('http://'+host.merchantIn+':'+port.merchantIn+''+path.getData+'');
+        //data.push(resMerchant.data.message);
 
-    const resMerchantOut = await axios.get('http://'+host.merchantOut+':'+port.merchantOut+''+path.getData+'');
-    //data.push(resMerchant.data.message);
+        const resMerchantOut = await axios.get('http://'+host.merchantOut+':'+port.merchantOut+''+path.getData+'');
+        //data.push(resMerchant.data.message);
 
-    const resCarrier = await axios.get('http://'+host.carrier+':'+port.carrier+''+path.getData+'');
-    //data.push(resCarrier.data.message);
+        const resCarrier = await axios.get('http://'+host.carrier+':'+port.carrier+''+path.getData+'');
+        //data.push(resCarrier.data.message);
 
-    const resAcopio = await axios.get('http://'+host.acopioIn+':'+port.acopioIn+''+path.getData+'');
-    //data.push(resAcopio.data.message);
+        const resAcopio = await axios.get('http://'+host.acopioIn+':'+port.acopioIn+''+path.getData+'');
+        //data.push(resAcopio.data.message);
 
-    const resAcopioOut = await axios.get('http://'+host.acopioOut+':'+port.acopioOut+''+path.getData+'');
-    //data.push(resAcopio.data.message);
+        const resAcopioOut = await axios.get('http://'+host.acopioOut+':'+port.acopioOut+''+path.getData+'');
+        //data.push(resAcopio.data.message);
 
-    const resProductor = await axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
-    //data.push(resProductor.data.message);
-    //console.log(resProductor, resAcopio, resAcopioOut, resCarrier, resMerchant, resMerchantOut);
-    res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, acopioOut: resAcopioOut.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message, merchantOut: resMerchantOut.data.message });
-  } catch (error) {
-    //console.log(error);
-    res.status(400).send({ message: error });
-  }
+        const resProductor = await axios.get('http://'+host.productor+':'+port.productor+''+path.getData+'');
+        //data.push(resProductor.data.message);
+        //console.log(resProductor, resAcopio, resAcopioOut, resCarrier, resMerchant, resMerchantOut);
+        res.status(200).send({ productor: resProductor.data.message, acopio: resAcopio.data.message, acopioOut: resAcopioOut.data.message, carrier: resCarrier.data.message, merchant: resMerchant.data.message, merchantOut: resMerchantOut.data.message });
+      } catch (error) {
+        //console.log(error);
+        res.status(400).send({ message: error });
+      }
+    }else if (data.message == false) {
+      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+    }else if(data.message == 'No existe la transacción') {
+      res.status(500).send({ message: data.message });
+    }
+  });
 }
 
 function getDataOut(req, res){
-  var typeOfUser = req.query.typeOfUser;
-  if(typeOfUser == 'Merchant'){
-    serviceInitGetDataOutM(req, function(data, err) {
-      if (err) {
-        res.status(500).send({ message: err });
-      }else {
-        if (data.history == null) {
-          res.status(400).send({ message: 'No ha registrado salidas' });
-          return;
-        }
-        res.status(200).send({ history: data.history });
+  serviceInitCheckPermission(req, function(dataPermit, err) {
+    if(data.message == true){
+      var typeOfUser = req.query.typeOfUser;
+      if(typeOfUser == 'Merchant'){
+        serviceInitGetDataOutM(req, function(data, err) {
+          if (err) {
+            res.status(500).send({ message: err });
+          }else {
+            if (data.history == null) {
+              res.status(400).send({ message: 'No ha registrado salidas' });
+              return;
+            }
+            res.status(200).send({ history: data.history });
+          }
+        });
+      } else if(typeOfUser == 'Carrier'){
+        console.log("EN CARRIER NO HAY");
+        res.status(500).send({ message: "NO EXISTE PARA CARRIER" });
+      } else if(typeOfUser == 'Acopio'){
+        serviceInitGetDataOutA(req, function(data, err) {
+          if (err) {
+            res.status(500).send({ message: err });
+          }else {
+            if (data.history == null) {
+              res.status(400).send({ message: 'No ha registrado salidas' });
+              return;
+            }
+            res.status(200).send({ history: data.history });
+          }
+        });
+      } else if(typeOfUser == 'Productor'){
+        console.log("EN PRODUCTOR NO HAY");
+        res.status(500).send({ message: "NO EXISTE PARA PRODUCTOR" });
       }
-    });
-  } else if(typeOfUser == 'Carrier'){
-    console.log("EN CARRIER NO HAY");
-    res.status(500).send({ message: "NO EXISTE PARA CARRIER" });
-  } else if(typeOfUser == 'Acopio'){
-    serviceInitGetDataOutA(req, function(data, err) {
-      if (err) {
-        res.status(500).send({ message: err });
-      }else {
-        if (data.history == null) {
-          res.status(400).send({ message: 'No ha registrado salidas' });
-          return;
-        }
-        res.status(200).send({ history: data.history });
-      }
-    });
-  } else if(typeOfUser == 'Productor'){
-    console.log("EN PRODUCTOR NO HAY");
-    res.status(500).send({ message: "NO EXISTE PARA PRODUCTOR" });
-  }
+    }else if (data.message == false) {
+      res.status(500).send({ message: 'No tienes permisos para agregar datos' });
+    }else if(data.message == 'No existe la transacción') {
+      res.status(500).send({ message: data.message });
+    }
+  });
+}
+
+function serviceInitCheckPermission(req, next) {
+  var url = 'http://'+host.users+':'+port.users+''+path.permitions+'';
+  axios.post(url, {
+    token: req.headers.authorization,
+    typeOfOperation: 'read',
+    nameOfOperation: 'readData'
+  })
+  .then(response => {
+    //console.log(response.data);
+    next(response.data, null);
+  })
+  .catch(error => {
+    console.log(error);
+    next(null, error);
+  });
 }
 
 function serviceInitGetDataOutA(req, next) {

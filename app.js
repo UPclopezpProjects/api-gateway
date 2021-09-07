@@ -36,6 +36,7 @@ global.path = {
   userDelete: '/userDelete/',
   emailToReset: '/emailToReset',
   resetPassword: '/resetPassword',
+  permitions: '/permitions',
   getData: '/getData',
   getDataOut: '/getDataOut',
   merchantsCompany: '/dataOfCompany',
