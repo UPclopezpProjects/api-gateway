@@ -1152,7 +1152,6 @@ function productorsData(req, res){
 }
 
 function serviceInitProductors(req, next) {
-  console.log(req.body);
     var url = 'http://'+host.productor+':'+port.productor+''+path.productor+'';
     axios.post(url, {
       fid: req.body.fid,
