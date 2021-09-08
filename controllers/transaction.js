@@ -1315,6 +1315,8 @@ function userCreation(req, res){
         //console.log(data);
       }
     });
+  }else {
+    res.status(404).send({ message: 'El tipo de usuario no existe' });
   }
 }
 
