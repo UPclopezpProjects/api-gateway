@@ -25,22 +25,23 @@ router.put('/resetPassword', TransactionController.resetPasswordPUT);
 
 router.post('/merchantsDataIn', TransactionController.merchantsData);
 router.post('/merchantsDataOut', TransactionController.merchantsDataOut);
-
 router.post('/getCompanyM', TransactionController.getCompanyM);
 router.post('/merchantsCompany', TransactionController.merchantsCompany);
+
 router.post('/getCompanyC', TransactionController.getCompanyC);
 router.post('/carriersData', TransactionController.carriersData);
 router.post('/carriersCompany', TransactionController.carriersCompany);
-router.post('/getCompanyA', TransactionController.getCompanyA);
 
+router.post('/getCompanyA', TransactionController.getCompanyA);
 router.post('/acopiosDataIn', TransactionController.acopiosData);
 router.post('/acopiosDataOut', TransactionController.acopiosDataOut);
 //router.put('/acopiosDataUpdate', TransactionController.updateTransaction);
-
 router.post('/acopiosCompany', TransactionController.acopiosCompany);
+
 router.post('/getCompanyP', TransactionController.getCompanyP);
 router.post('/productorsData', TransactionController.productorsData);
 router.post('/productorsCompany', TransactionController.productorsCompany);
+
 router.post('/traceability', TransactionController.traceability);
 router.get('/getHistory', TransactionController.getHistory);
 

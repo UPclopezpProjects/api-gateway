@@ -480,14 +480,19 @@ function getFileStream(req, res) {
 }
 
 function merchantsCompany(req, res) {
-  serviceInitMerchantsCompany(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ message: data.message, user: data.user });
-          //console.log(data);
-      }
-  });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      serviceInitMerchantsCompany(req, function(data, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user });
+              //console.log(data);
+          }
+      });
+    }
 }
 
 function serviceInitMerchantsCompany(req, next) {
@@ -514,22 +519,27 @@ function serviceInitMerchantsCompany(req, next) {
 }
 
 function getCompanyM(req, res) {
-  serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(dataPermit.message == true){
-      serviceInitGetCompanyM(req, function(data, err) {
-          if (err) {
-              res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ message: data.message, user: data.user });
-              //console.log(data);
-          }
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+    res.status(500).send({message: 'No hay token'});
+    return;
+  }else {
+      serviceInitCheckPermission(req, function(dataPermit, err) {
+        if(dataPermit.message == true){
+          serviceInitGetCompanyM(req, function(data, err) {
+              if (err) {
+                  res.status(500).send({ message: err });
+              }else {
+                res.status(200).send({ message: data.message, user: data.user });
+                  //console.log(data);
+              }
+          });
+        }else if (dataPermit.message == false) {
+          res.status(500).send({ message: 'No tienes permisos para ver datos' });
+        }else if(dataPermit.message == 'No existe la transacción') {
+          res.status(500).send({ message: dataPermit.message });
+        }
       });
-    }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para ver datos' });
-    }else if(dataPermit.message == 'No existe la transacción') {
-      res.status(500).send({ message: dataPermit.message });
     }
-  });
 }
 
 function serviceInitGetCompanyM(req, next) {
@@ -553,21 +563,26 @@ function serviceInitGetCompanyM(req, next) {
 }
 
 function merchantsData(req, res){
-  uploadImages(req, function(imageName, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        req.body.image = imageName;
-        serviceInitMerchants(req, function(data, err) {
-            if (err) {
-                res.status(500).send({ message: err });
-            }else {
-              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
-                //console.log(data);
-            }
-        });
-      }
-  });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+    res.status(500).send({message: 'No hay token'});
+    return;
+  }else {
+    uploadImages(req, function(imageName, err) {
+        if (err) {
+            res.status(500).send({ message: err });
+        }else {
+          req.body.image = imageName;
+          serviceInitMerchants(req, function(data, err) {
+              if (err) {
+                  res.status(500).send({ message: err });
+              }else {
+                res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                  //console.log(data);
+              }
+          });
+        }
+    });
+  }
 }
 
 function serviceInitMerchants(req, next) {
@@ -603,40 +618,45 @@ function serviceInitMerchants(req, next) {
 }
 
 function merchantsDataOut(req, res){
-  if (req.body.id == '' || req.body.quantity == '') {
-    res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+    res.status(500).send({message: 'No hay token'});
     return;
-  }else if (req.body.quantity <= 0) {
-    res.status(400).send({ message: 'Cantidad no válida' });
-    return;
-  }
-  uploadImages(req, function(imageName, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        req.body.image = imageName;
-        updateTransactionM(req, function(data, err) {
-            if (err) {
-                res.status(500).send({ message: err });
-            }else {
-              if (data == true) {
-                serviceInitMerchantsOut(req, function(data, err) {
-                    if (err) {
-                        res.status(500).send({ message: err });
-                    }else {
-                      res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
-                        //console.log(data);
-                    }
-                });
-              }else if(data == false) {
-                res.status(400).send({ message: 'No hay stock' });
+  }else {
+    if (req.body.id == '' || req.body.quantity == '') {
+      res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
+      return;
+    }else if (req.body.quantity <= 0) {
+      res.status(400).send({ message: 'Cantidad no válida' });
+      return;
+    }
+    uploadImages(req, function(imageName, err) {
+        if (err) {
+            res.status(500).send({ message: err });
+        }else {
+          req.body.image = imageName;
+          updateTransactionM(req, function(data, err) {
+              if (err) {
+                  res.status(500).send({ message: err });
               }else {
-                res.status(400).send({ message: data });
+                if (data == true) {
+                  serviceInitMerchantsOut(req, function(data, err) {
+                      if (err) {
+                          res.status(500).send({ message: err });
+                      }else {
+                        res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                          //console.log(data);
+                      }
+                  });
+                }else if(data == false) {
+                  res.status(400).send({ message: 'No hay stock' });
+                }else {
+                  res.status(400).send({ message: data });
+                }
               }
-            }
-        });
-      }
-  });
+          });
+        }
+    });
+  }
 }
 
 function serviceInitMerchantsOut(req, next) {
@@ -706,14 +726,19 @@ function serviceInitMerchantsUpdate(req, next) {
 }
 
 function carriersCompany(req, res) {
-  serviceInitCarriersCompany(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ message: data.message, user: data.user });
-          //console.log(data);
-      }
-  });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      serviceInitCarriersCompany(req, function(data, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user });
+              //console.log(data);
+          }
+      });
+    }
 }
 
 function serviceInitCarriersCompany(req, next) {
@@ -740,23 +765,28 @@ function serviceInitCarriersCompany(req, next) {
 }
 
 function getCompanyC(req, res) {
-  console.log(req.body);
-  serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(dataPermit.message == true){
-      serviceInitGetCompanyC(req, function(data, err) {
-          if (err) {
-              res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ message: data.message, user: data.user });
-              //console.log(data);
-          }
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      console.log(req.body);
+      serviceInitCheckPermission(req, function(dataPermit, err) {
+        if(dataPermit.message == true){
+          serviceInitGetCompanyC(req, function(data, err) {
+              if (err) {
+                  res.status(500).send({ message: err });
+              }else {
+                res.status(200).send({ message: data.message, user: data.user });
+                  //console.log(data);
+              }
+          });
+        }else if (dataPermit.message == false) {
+          res.status(500).send({ message: 'No tienes permisos para ver datos' });
+        }else if(dataPermit.message == 'No existe la transacción') {
+          res.status(500).send({ message: dataPermit.message });
+        }
       });
-    }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para ver datos' });
-    }else if(dataPermit.message == 'No existe la transacción') {
-      res.status(500).send({ message: dataPermit.message });
     }
-  });
 }
 
 function serviceInitGetCompanyC(req, next) {
@@ -775,24 +805,29 @@ function serviceInitGetCompanyC(req, next) {
 }
 
 function carriersData(req, res){
-  uploadImages(req, function(imageNames, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        //console.log(imageNames);
-        req.body.image = imageNames[0];
-        req.body.vehiclePhotos = imageNames[1];
-        req.body.productPhotos = imageNames[2];
-        serviceInitCarriers(req, function(data, err) {
-            if (err) {
-                res.status(500).send({ message: err });
-            }else {
-              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
-                //console.log(data);
-            }
-        });
-      }
-  });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      uploadImages(req, function(imageNames, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            //console.log(imageNames);
+            req.body.image = imageNames[0];
+            req.body.vehiclePhotos = imageNames[1];
+            req.body.productPhotos = imageNames[2];
+            serviceInitCarriers(req, function(data, err) {
+                if (err) {
+                    res.status(500).send({ message: err });
+                }else {
+                  res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                    //console.log(data);
+                }
+            });
+          }
+      });
+    }
 }
 
 function serviceInitCarriers(req, next) {
@@ -833,15 +868,20 @@ function serviceInitCarriers(req, next) {
 }
 
 function acopiosCompany(req, res) {
-  console.log(req.body);
-  serviceInitAcopiosCompany(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ message: data.message, user: data.user });
-          //console.log(data);
-      }
-  });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      console.log(req.body);
+      serviceInitAcopiosCompany(req, function(data, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user });
+              //console.log(data);
+          }
+      });
+    }
 }
 
 function serviceInitAcopiosCompany(req, next) {
@@ -868,22 +908,27 @@ function serviceInitAcopiosCompany(req, next) {
 }
 
 function getCompanyA(req, res) {
-  serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(dataPermit.message == true){
-      serviceInitGetCompanyA(req, function(data, err) {
-          if (err) {
-              res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ message: data.message, user: data.user });
-              //console.log(data);
-          }
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      serviceInitCheckPermission(req, function(dataPermit, err) {
+        if(dataPermit.message == true){
+          serviceInitGetCompanyA(req, function(data, err) {
+              if (err) {
+                  res.status(500).send({ message: err });
+              }else {
+                res.status(200).send({ message: data.message, user: data.user });
+                  //console.log(data);
+              }
+          });
+        }else if (dataPermit.message == false) {
+          res.status(500).send({ message: 'No tienes permisos para ver datos' });
+        }else if(dataPermit.message == 'No existe la transacción') {
+          res.status(500).send({ message: dataPermit.message });
+        }
       });
-    }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para ver datos' });
-    }else if(dataPermit.message == 'No existe la transacción') {
-      res.status(500).send({ message: dataPermit.message });
     }
-  });
 }
 
 function serviceInitGetCompanyA(req, next) {
@@ -902,21 +947,26 @@ function serviceInitGetCompanyA(req, next) {
 }
 
 function acopiosData(req, res){
-  uploadImages(req, function(imageName, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        req.body.image = imageName;
-        serviceInitAcopios(req, function(data, err) {
-            if (err) {
-                res.status(500).send({ message: err });
-            }else {
-              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
-                //console.log(data);
-            }
-        });
-      }
-  });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      uploadImages(req, function(imageName, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            req.body.image = imageName;
+            serviceInitAcopios(req, function(data, err) {
+                if (err) {
+                    res.status(500).send({ message: err });
+                }else {
+                  res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                    //console.log(data);
+                }
+            });
+          }
+      });
+    }
 }
 
 function serviceInitAcopios(req, next) {
@@ -957,41 +1007,46 @@ function serviceInitAcopios(req, next) {
 }
 
 function acopiosDataOut(req, res){
-  if (req.body.id == '' || req.body.quantity == '') {
-    res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
-    return;
-  }else if (req.body.quantity <= 0) {
-    res.status(400).send({ message: 'Cantidad no válida' });
-    return;
-  }
-  uploadImages(req, function(imageName, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        req.body.image = imageName;
-        updateTransactionA(req, function(data, err) {
-            if (err) {
-                res.status(500).send({ message: err });
-            }else {
-              if (data == true) {
-                serviceInitAcopiosOut(req, function(data, err) {
-                    if (err) {
-                        res.status(500).send({ message: err });
-                    }else {
-                      res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
-                      //console.log(data);
-                    }
-                });
-              }else if(data == false) {
-                res.status(400).send({ message: 'No hay stock' });
-              }else {
-                res.status(400).send({ message: data });
-              }
-            }
-        });
-
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      if (req.body.id == '' || req.body.quantity == '') {
+        res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
+        return;
+      }else if (req.body.quantity <= 0) {
+        res.status(400).send({ message: 'Cantidad no válida' });
+        return;
       }
-  });
+      uploadImages(req, function(imageName, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            req.body.image = imageName;
+            updateTransactionA(req, function(data, err) {
+                if (err) {
+                    res.status(500).send({ message: err });
+                }else {
+                  if (data == true) {
+                    serviceInitAcopiosOut(req, function(data, err) {
+                        if (err) {
+                            res.status(500).send({ message: err });
+                        }else {
+                          res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                          //console.log(data);
+                        }
+                    });
+                  }else if(data == false) {
+                    res.status(400).send({ message: 'No hay stock' });
+                  }else {
+                    res.status(400).send({ message: data });
+                  }
+                }
+            });
+
+          }
+      });
+    }
 }
 
 function serviceInitAcopiosOut(req, next) {
@@ -1065,14 +1120,19 @@ function serviceInitAcopiosUpdate(req, next) {
 }
 
 function productorsCompany(req, res) {
-  serviceInitProductorsCompany(req, function(data, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ message: data.message, user: data.user });
-          //console.log(data);
-      }
-  });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      serviceInitProductorsCompany(req, function(data, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            res.status(200).send({ message: data.message, user: data.user });
+              //console.log(data);
+          }
+      });
+    }
 }
 
 function serviceInitProductorsCompany(req, next) {
@@ -1099,22 +1159,27 @@ function serviceInitProductorsCompany(req, next) {
 }
 
 function getCompanyP(req, res) {
-  serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(dataPermit.message == true){
-      serviceInitGetCompanyP(req, function(data, err) {
-          if (err) {
-              res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ message: data.message, user: data.user });
-              //console.log(data);
-          }
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      serviceInitCheckPermission(req, function(dataPermit, err) {
+        if(dataPermit.message == true){
+          serviceInitGetCompanyP(req, function(data, err) {
+              if (err) {
+                  res.status(500).send({ message: err });
+              }else {
+                res.status(200).send({ message: data.message, user: data.user });
+                  //console.log(data);
+              }
+          });
+        }else if (dataPermit.message == false) {
+          res.status(500).send({ message: 'No tienes permisos para ver datos' });
+        }else if(dataPermit.message == 'No existe la transacción') {
+          res.status(500).send({ message: dataPermit.message });
+        }
       });
-    }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para ver datos' });
-    }else if(dataPermit.message == 'No existe la transacción') {
-      res.status(500).send({ message: dataPermit.message });
     }
-  });
 }
 
 function serviceInitGetCompanyP(req, next) {
@@ -1133,22 +1198,27 @@ function serviceInitGetCompanyP(req, next) {
 }
 
 function productorsData(req, res){
-  uploadImages(req, function(imageName, err) {
-      if (err) {
-          res.status(500).send({ message: err });
-      }else {
-        //console.log(imageName);
-        req.body.image = imageName;
-        serviceInitProductors(req, function(data, err) {
-            if (err) {
-                res.status(500).send({ message: err });
-            }else {
-              res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
-                //console.log(data);
-            }
-        });
-      }
-  });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      uploadImages(req, function(imageName, err) {
+          if (err) {
+              res.status(500).send({ message: err });
+          }else {
+            //console.log(imageName);
+            req.body.image = imageName;
+            serviceInitProductors(req, function(data, err) {
+                if (err) {
+                    res.status(500).send({ message: err });
+                }else {
+                  res.status(200).send({ message: data.message, addData: data.addData, info: data.info });
+                    //console.log(data);
+                }
+            });
+          }
+      });
+    }
 }
 
 function serviceInitProductors(req, next) {
@@ -1279,44 +1349,49 @@ function serviceInitLogin(req, next) {
 }
 
 function userCreation(req, res){
-  if(req.body.typeOfUser == 'Root'){
-    serviceInitUserCreationRoot(req, function(data, err) {
-      if (err) {
-        //console.log(err);
-        res.status(500).send({ message: err });
-      }else {
-        if(data.user){
-          res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB, user: data.user, token: data.token });
-        }else if(data.sessionID){
-          res.status(200).send({ message: data.message, sessionID: data.sessionID, token: data.token});
-        }else {
-          res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB});
-        }
-        //res.status(200).send({ message: data.message, user: data.user, token: data.token });
-        //console.log(data);
-      }
-    });
-  }else if(req.body.typeOfUser == 'Administrator' || req.body.typeOfUser == 'Merchant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
-    serviceInitUserCreation(req, function(data, err) {
-      if (err) {
-        res.status(500).send({ message: err });
-      }else {
-        //console.log(data);
-        res.status(200).send({ message: data.message });
-      }
-    });
-  }else if(req.body.typeOfUser == 'Consumer'){
-    serviceInitUserCreationConsumer(req, function(data, err) {
-      if (err) {
-        res.status(500).send({ message: err });
-      }else {
-        res.status(200).send({ message: data.message, user: data.user, token: data.token });
-        //res.status(200).send({ message: data.message });
-        //console.log(data);
-      }
-    });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+    res.status(500).send({message: 'No hay token'});
+    return;
   }else {
-    res.status(404).send({ message: 'El tipo de usuario no existe' });
+    if(req.body.typeOfUser == 'Root'){
+      serviceInitUserCreationRoot(req, function(data, err) {
+        if (err) {
+          //console.log(err);
+          res.status(500).send({ message: err });
+        }else {
+          if(data.user){
+            res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB, user: data.user, token: data.token });
+          }else if(data.sessionID){
+            res.status(200).send({ message: data.message, sessionID: data.sessionID, token: data.token});
+          }else {
+            res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB});
+          }
+          //res.status(200).send({ message: data.message, user: data.user, token: data.token });
+          //console.log(data);
+        }
+      });
+    }else if(req.body.typeOfUser == 'Administrator' || req.body.typeOfUser == 'Merchant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
+      serviceInitUserCreation(req, function(data, err) {
+        if (err) {
+          res.status(500).send({ message: err });
+        }else {
+          //console.log(data);
+          res.status(200).send({ message: data.message });
+        }
+      });
+    }else if(req.body.typeOfUser == 'Consumer'){
+      serviceInitUserCreationConsumer(req, function(data, err) {
+        if (err) {
+          res.status(500).send({ message: err });
+        }else {
+          res.status(200).send({ message: data.message, user: data.user, token: data.token });
+          //res.status(200).send({ message: data.message });
+          //console.log(data);
+        }
+      });
+    }else {
+      res.status(404).send({ message: 'El tipo de usuario no existe' });
+    }
   }
 }
 
@@ -1423,6 +1498,10 @@ function serviceInitUserCreationConsumer(req, next) {
 }
 
 function userDetails(req, res){
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+    res.status(500).send({message: 'No hay token'});
+    return;
+  }else {
     serviceInitUserDetails(req, function(data, err) {
         if (err) {
             res.status(500).send({ message: err });
@@ -1432,6 +1511,7 @@ function userDetails(req, res){
             //console.log(data);
         }
     });
+  }
 }
 
 function serviceInitUserDetails(req, next) {
@@ -1452,6 +1532,10 @@ function serviceInitUserDetails(req, next) {
 }
 
 function usersDetails(req, res){
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+    res.status(500).send({message: 'No hay token'});
+    return;
+  }else {
     serviceInitUsersDetails(req, function(data, err) {
         if (err) {
             res.status(500).send({ message: err });
@@ -1459,6 +1543,7 @@ function usersDetails(req, res){
             res.status(200).send({ users: data.users, total_items: data.total_items });
         }
     });
+  }
 }
 
 function serviceInitUsersDetails(req, next) {
@@ -1479,6 +1564,10 @@ function serviceInitUsersDetails(req, next) {
 }
 
 function userUpdate(req, res){
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+    res.status(500).send({message: 'No hay token'});
+    return;
+  }else {
     var payload = decodeToken(req.headers.authorization);
     if(payload.typeOfUser == 'Consumer'){
         serviceInitUserUpdateConsumer(req, function(data, err) {
@@ -1503,6 +1592,7 @@ function userUpdate(req, res){
             }
         });
     }
+  }
 }
 
 function serviceInitUserUpdate(req, next) {
@@ -1566,6 +1656,10 @@ function serviceInitUserUpdateConsumer(req, next) {
 }
 
 function userDelete(req, res){
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+    res.status(500).send({message: 'No hay token'});
+    return;
+  }else {
     serviceInitUserDelete(req, function(data, err) {
         if (err) {
             res.status(500).send({ message: err });
@@ -1574,6 +1668,7 @@ function userDelete(req, res){
             //console.log(data);
         }
     });
+  }
 }
 
 function serviceInitUserDelete(req, next) {
