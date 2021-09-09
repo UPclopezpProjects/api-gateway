@@ -15,50 +15,55 @@ const s3 = new AWS.S3({
 });
 
 function getHistory(req, res) {
-  serviceInitCheckPermission(req, function(dataPermit, err) {
-    if(dataPermit.message == true){
-      var typeOfUser = req.query.typeOfUser;
-      if(typeOfUser == 'Merchant'){
-        serviceInitHistoryM(req, function(data, err) {
-          if (err) {
-            res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ history: data.history });
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+      res.status(500).send({message: 'No hay token'});
+      return;
+    }else {
+      serviceInitCheckPermission(req, function(dataPermit, err) {
+        if(dataPermit.message == true){
+          var typeOfUser = req.query.typeOfUser;
+          if(typeOfUser == 'Merchant'){
+            serviceInitHistoryM(req, function(data, err) {
+              if (err) {
+                res.status(500).send({ message: err });
+              }else {
+                res.status(200).send({ history: data.history });
+              }
+            });
+          } else if(typeOfUser == 'Carrier'){
+            serviceInitHistoryC(req, function(data, err) {
+              if (err) {
+                res.status(500).send({ message: err });
+              }else {
+                res.status(200).send({ history: data.history });
+              }
+            });
+          } else if(typeOfUser == 'Acopio'){
+            serviceInitHistoryA(req, function(data, err) {
+              if (err) {
+                res.status(500).send({ message: err });
+              }else {
+                res.status(200).send({ history: data.history });
+              }
+            });
+          } else if(typeOfUser == 'Productor'){
+            //console.log('toy');
+            serviceInitHistoryP(req, function(data, err) {
+              if (err) {
+                res.status(500).send({ message: err });
+              }else {
+                res.status(200).send({ history: data.history });
+              }
+            });
           }
-        });
-      } else if(typeOfUser == 'Carrier'){
-        serviceInitHistoryC(req, function(data, err) {
-          if (err) {
-            res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ history: data.history });
-          }
-        });
-      } else if(typeOfUser == 'Acopio'){
-        serviceInitHistoryA(req, function(data, err) {
-          if (err) {
-            res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ history: data.history });
-          }
-        });
-      } else if(typeOfUser == 'Productor'){
-        //console.log('toy');
-        serviceInitHistoryP(req, function(data, err) {
-          if (err) {
-            res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ history: data.history });
-          }
-        });
-      }
 
-    }else if (dataPermit.message == false) {
-      res.status(500).send({ message: 'No tienes permisos para ver datos' });
-    }else if(dataPermit.message == 'No existe la transacción') {
-      res.status(500).send({ message: dataPermit.message });
+        }else if (dataPermit.message == false) {
+          res.status(500).send({ message: 'No tienes permisos para ver datos' });
+        }else if(dataPermit.message == 'No existe la transacción') {
+          res.status(500).send({ message: dataPermit.message });
+        }
+      });
     }
-  });
 }
 
 function serviceInitHistoryM(req, next) {
@@ -1349,6 +1354,7 @@ function serviceInitLogin(req, next) {
 }
 
 function userCreation(req, res){
+  console.log(req.headers);
   if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
     res.status(500).send({message: 'No hay token'});
     return;
