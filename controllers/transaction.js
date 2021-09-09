@@ -15,7 +15,7 @@ const s3 = new AWS.S3({
 });
 
 function getHistory(req, res) {
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -485,7 +485,7 @@ function getFileStream(req, res) {
 }
 
 function merchantsCompany(req, res) {
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -524,7 +524,7 @@ function serviceInitMerchantsCompany(req, next) {
 }
 
 function getCompanyM(req, res) {
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
     res.status(500).send({message: 'No hay token'});
     return;
   }else {
@@ -568,7 +568,7 @@ function serviceInitGetCompanyM(req, next) {
 }
 
 function merchantsData(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
     res.status(500).send({message: 'No hay token'});
     return;
   }else {
@@ -623,7 +623,7 @@ function serviceInitMerchants(req, next) {
 }
 
 function merchantsDataOut(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
     res.status(500).send({message: 'No hay token'});
     return;
   }else {
@@ -731,7 +731,7 @@ function serviceInitMerchantsUpdate(req, next) {
 }
 
 function carriersCompany(req, res) {
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -770,7 +770,7 @@ function serviceInitCarriersCompany(req, next) {
 }
 
 function getCompanyC(req, res) {
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -810,7 +810,7 @@ function serviceInitGetCompanyC(req, next) {
 }
 
 function carriersData(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -873,7 +873,7 @@ function serviceInitCarriers(req, next) {
 }
 
 function acopiosCompany(req, res) {
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -913,7 +913,7 @@ function serviceInitAcopiosCompany(req, next) {
 }
 
 function getCompanyA(req, res) {
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -952,7 +952,7 @@ function serviceInitGetCompanyA(req, next) {
 }
 
 function acopiosData(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -1012,7 +1012,7 @@ function serviceInitAcopios(req, next) {
 }
 
 function acopiosDataOut(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -1125,7 +1125,7 @@ function serviceInitAcopiosUpdate(req, next) {
 }
 
 function productorsCompany(req, res) {
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -1164,7 +1164,7 @@ function serviceInitProductorsCompany(req, next) {
 }
 
 function getCompanyP(req, res) {
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -1203,7 +1203,7 @@ function serviceInitGetCompanyP(req, next) {
 }
 
 function productorsData(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
@@ -1355,7 +1355,7 @@ function serviceInitLogin(req, next) {
 
 function userCreation(req, res){
   console.log(req.headers);
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
     res.status(500).send({message: 'No hay token'});
     return;
   }else {
@@ -1504,7 +1504,7 @@ function serviceInitUserCreationConsumer(req, next) {
 }
 
 function userDetails(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
     res.status(500).send({message: 'No hay token'});
     return;
   }else {
@@ -1538,7 +1538,7 @@ function serviceInitUserDetails(req, next) {
 }
 
 function usersDetails(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
     res.status(500).send({message: 'No hay token'});
     return;
   }else {
@@ -1570,7 +1570,7 @@ function serviceInitUsersDetails(req, next) {
 }
 
 function userUpdate(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
     res.status(500).send({message: 'No hay token'});
     return;
   }else {
@@ -1662,7 +1662,7 @@ function serviceInitUserUpdateConsumer(req, next) {
 }
 
 function userDelete(req, res){
-  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authToken) {
+  if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
     res.status(500).send({message: 'No hay token'});
     return;
   }else {
