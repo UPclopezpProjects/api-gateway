@@ -1393,7 +1393,7 @@ function userCreation(req, res){
   }else if (!req.headers.authorization || !req.headers.session) {
     res.status(500).send({message: 'Error en las cabeceras'});
   }else {
-    res.status(404).send({ message: 'Tas loco' });
+    res.status(404).send({ message: 'Error en la entrada de datos' });
   }
 }
 
