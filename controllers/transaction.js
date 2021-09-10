@@ -1354,11 +1354,23 @@ function serviceInitLogin(req, next) {
 }
 
 function userCreation(req, res){
-  console.log(req.headers);
+  //console.log(req.headers);
+  if(req.body.typeOfUser == 'Consumer'){
+    serviceInitUserCreationConsumer(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        res.status(200).send({ message: data.message, user: data.user, token: data.token });
+        //res.status(200).send({ message: data.message });
+        //console.log(data);
+      }
+    });
+  }
+
   if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
     res.status(500).send({message: 'No hay token'});
     return;
-  }else {
+  } else {
     if(req.body.typeOfUser == 'Root'){
       serviceInitUserCreationRoot(req, function(data, err) {
         if (err) {
