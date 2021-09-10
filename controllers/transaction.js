@@ -1371,7 +1371,7 @@ function userCreation(req, res){
         //console.log(data);
       }
     });
-  }else if (req.body.typeOfUser == 'Administrator' && req.headers.authorization || req.body.typeOfUser == 'Merchant' && req.headers.authorization || req.body.typeOfUser == 'Carrier' && req.headers.authorization || req.body.typeOfUser == 'Acopio' && req.headers.authorization || req.body.typeOfUser == 'Productor' && req.headers.authorization) {
+  }else if (req.body.typeOfUser == 'Administrator' && req.headers.authorization && !req.headers.session || req.body.typeOfUser == 'Merchant' && req.headers.authorization && !req.headers.session || req.body.typeOfUser == 'Carrier' && req.headers.authorization && !req.headers.session || req.body.typeOfUser == 'Acopio' && req.headers.authorization && !req.headers.session || req.body.typeOfUser == 'Productor' && req.headers.authorization && !req.headers.session) {
     serviceInitUserCreation(req, function(data, err) {
       if (err) {
         res.status(500).send({ message: err });
@@ -1391,12 +1391,9 @@ function userCreation(req, res){
       }
     });
   }else if (!req.headers.authorization || !req.headers.session) {
-    console.log(req.headers);
-    console.log(req.headers.session);
-
     res.status(500).send({message: 'Error en las cabeceras'});
   }else {
-    res.status(404).send({ message: 'La transacciones no coinciden: Tipo de operación - '+req.body.typeOfOperation+'; Nombre de operación - '+req.body.nameOfOperation+'; Tipo de usuario - '+req.body.typeOfUser });
+    res.status(404).send({ message: 'Tas loco' });
   }
 }
 
