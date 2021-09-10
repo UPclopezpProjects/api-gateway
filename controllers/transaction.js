@@ -1354,6 +1354,8 @@ function serviceInitLogin(req, next) {
 }
 
 function userCreation(req, res){
+  console.log(999999999999999999);
+
   if (req.body.typeOfUser == 'Root' && req.headers.authorization && req.headers.session) {
     serviceInitUserCreationRoot(req, function(data, err) {
       if (err) {
@@ -1372,7 +1374,6 @@ function userCreation(req, res){
       }
     });
   }else if (req.body.typeOfUser == 'Administrator' && req.headers.authorization && !req.headers.session || req.body.typeOfUser == 'Merchant' && req.headers.authorization && !req.headers.session || req.body.typeOfUser == 'Carrier' && req.headers.authorization && !req.headers.session || req.body.typeOfUser == 'Acopio' && req.headers.authorization && !req.headers.session || req.body.typeOfUser == 'Productor' && req.headers.authorization && !req.headers.session) {
-    console.log(0);
     serviceInitUserCreation(req, function(data, err) {
       if (err) {
         res.status(500).send({ message: err });
