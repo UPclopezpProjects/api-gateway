@@ -1354,8 +1354,33 @@ function serviceInitLogin(req, next) {
 }
 
 function userCreation(req, res){
-  console.log(req.body);
-  if(req.body.typeOfUser == 'Consumer'){
+  if (req.body.typeOfUser == 'Root' && req.headers.authorization && req.headers.session) {
+    serviceInitUserCreationRoot(req, function(data, err) {
+      if (err) {
+        //console.log(err);
+        res.status(500).send({ message: err });
+      }else {
+        if(data.user){
+          res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB, user: data.user, token: data.token });
+        }else if(data.sessionID){
+          res.status(200).send({ message: data.message, sessionID: data.sessionID, token: data.token});
+        }else {
+          res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB});
+        }
+        //res.status(200).send({ message: data.message, user: data.user, token: data.token });
+        //console.log(data);
+      }
+    });
+  }else if (req.body.typeOfUser == 'Administrator' && req.headers.authorization || req.body.typeOfUser == 'Merchant' && req.headers.authorization || req.body.typeOfUser == 'Carrier' && req.headers.authorization || req.body.typeOfUser == 'Acopio' && req.headers.authorization || req.body.typeOfUser == 'Productor' && req.headers.authorization) {
+    serviceInitUserCreation(req, function(data, err) {
+      if (err) {
+        res.status(500).send({ message: err });
+      }else {
+        //console.log(data);
+        res.status(200).send({ message: data.message });
+      }
+    });
+  }else if (req.body.typeOfUser == 'Consumer' && !req.headers.authorization && !req.headers.session) {
     serviceInitUserCreationConsumer(req, function(data, err) {
       if (err) {
         res.status(500).send({ message: err });
@@ -1365,41 +1390,10 @@ function userCreation(req, res){
         //console.log(data);
       }
     });
+  }else if (!req.headers.authorization || !req.headers.session) {
+    res.status(500).send({message: 'Error en las cabeceras'});
   }else {
-    if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
-      res.status(500).send({message: 'No hay token'});
-      return;
-    } else {
-      if(req.body.typeOfUser == 'Root'){
-        serviceInitUserCreationRoot(req, function(data, err) {
-          if (err) {
-            //console.log(err);
-            res.status(500).send({ message: err });
-          }else {
-            if(data.user){
-              res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB, user: data.user, token: data.token });
-            }else if(data.sessionID){
-              res.status(200).send({ message: data.message, sessionID: data.sessionID, token: data.token});
-            }else {
-              res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB});
-            }
-            //res.status(200).send({ message: data.message, user: data.user, token: data.token });
-            //console.log(data);
-          }
-        });
-      }else if(req.body.typeOfUser == 'Administrator' || req.body.typeOfUser == 'Merchant' || req.body.typeOfUser == 'Carrier' || req.body.typeOfUser == 'Acopio' || req.body.typeOfUser == 'Productor'){
-        serviceInitUserCreation(req, function(data, err) {
-          if (err) {
-            res.status(500).send({ message: err });
-          }else {
-            //console.log(data);
-            res.status(200).send({ message: data.message });
-          }
-        });
-      }else {
-        res.status(404).send({ message: 'El tipo de usuario no existe' });
-      }
-    }
+    res.status(404).send({ message: 'La transacciones no coinciden: Tipo de operación - '+req.body.typeOfOperation+'; Nombre de operación - '+req.body.nameOfOperation+'; Tipo de usuario - '+req.body.typeOfUser });
   }
 }
 
