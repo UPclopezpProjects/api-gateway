@@ -1354,8 +1354,6 @@ function serviceInitLogin(req, next) {
 }
 
 function userCreation(req, res){
-  console.log(999999999999999999);
-
   if (req.body.typeOfUser == 'Root' && req.headers.authorization && req.headers.session) {
     serviceInitUserCreationRoot(req, function(data, err) {
       if (err) {
