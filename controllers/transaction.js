@@ -1396,16 +1396,6 @@ function userCreation(req, res){
             res.status(200).send({ message: data.message });
           }
         });
-      }else if(req.body.typeOfUser == 'Consumer'){
-        serviceInitUserCreationConsumer(req, function(data, err) {
-          if (err) {
-            res.status(500).send({ message: err });
-          }else {
-            res.status(200).send({ message: data.message, user: data.user, token: data.token });
-            //res.status(200).send({ message: data.message });
-            //console.log(data);
-          }
-        });
       }else {
         res.status(404).send({ message: 'El tipo de usuario no existe' });
       }
@@ -1443,7 +1433,7 @@ function serviceInitUserCreationRoot(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        //console.log(error);
+        console.log(error);
         //console.log(error.response.data.message);
         next(null, error.response.data.message);
     });
