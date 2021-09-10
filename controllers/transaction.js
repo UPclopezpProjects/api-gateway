@@ -1390,7 +1390,7 @@ function userCreation(req, res){
         //console.log(data);
       }
     });
-  }else if (!req.headers.authorization || !req.headers.session) {
+  }else if (req.body.typeOfUser != 'Root' && req.headers.authorization && req.headers.session || !req.headers.authorization || !req.headers.session) {
     res.status(500).send({message: 'Error en las cabeceras'});
   }else {
     res.status(404).send({ message: 'Error en la entrada de datos' });
