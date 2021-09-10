@@ -1391,6 +1391,9 @@ function userCreation(req, res){
       }
     });
   }else if (!req.headers.authorization || !req.headers.session) {
+    console.log(req.headers);
+    console.log(req.headers.session);
+
     res.status(500).send({message: 'Error en las cabeceras'});
   }else {
     res.status(404).send({ message: 'La transacciones no coinciden: Tipo de operación - '+req.body.typeOfOperation+'; Nombre de operación - '+req.body.nameOfOperation+'; Tipo de usuario - '+req.body.typeOfUser });
@@ -1427,7 +1430,7 @@ function serviceInitUserCreationRoot(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        console.log(error);
+        //console.log(error);
         //console.log(error.response.data.message);
         next(null, error.response.data.message);
     });
