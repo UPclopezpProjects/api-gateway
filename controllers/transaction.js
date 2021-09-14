@@ -304,7 +304,7 @@ function getHistoryOut(req, res){
           }
         });
       } else if(typeOfUser == 'Carrier'){
-        console.log("EN CARRIER NO HAY");
+        //console.log("EN CARRIER NO HAY");
         res.status(500).send({ message: "NO EXISTE PARA CARRIER" });
       } else if(typeOfUser == 'Acopio'){
         serviceInitGetDataOutA(req, function(data, err) {
@@ -319,7 +319,7 @@ function getHistoryOut(req, res){
           }
         });
       } else if(typeOfUser == 'Productor'){
-        console.log("EN PRODUCTOR NO HAY");
+        //console.log("EN PRODUCTOR NO HAY");
         res.status(500).send({ message: "NO EXISTE PARA PRODUCTOR" });
       }
     }else if (dataPermit.message == false) {
@@ -338,11 +338,11 @@ function serviceInitCheckPermission(req, next) {
     nameOfOperation: 'readData'
   })
   .then(response => {
-    //console.log(response.data);
+    ////console.log(response.data);
     next(response.data, null);
   })
   .catch(error => {
-    console.log(error);
+    //console.log(error);
     next(null, error);
   });
 }
@@ -381,7 +381,7 @@ function serviceInitGetDataOutM(req, next) {
 
 function uploadImages(req, next) {
   if (req.files.vehiclePhotos == undefined && req.files.productPhotos == undefined || req.files.vehiclePhotos == 'undefined' && req.files.productPhotos == 'undefined') {
-    console.log("undefined for vehiclePhotos and productPhotos");
+    //console.log("undefined for vehiclePhotos and productPhotos");
     for(var fileImage of req.files.image){
       let myFile = fileImage.originalname.split(".");
       const fileType = myFile[myFile.length - 1];
@@ -701,7 +701,7 @@ function updateTransactionM(req, next){
     if (err) {
       next(null, err);
     }else {
-      console.log(data);
+      //console.log(data);
       next(data.message, null);
     }
   });
@@ -774,7 +774,7 @@ function getCompanyC(req, res) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
-      console.log(req.body);
+      //console.log(req.body);
       serviceInitCheckPermission(req, function(dataPermit, err) {
         if(dataPermit.message == true){
           serviceInitGetCompanyC(req, function(data, err) {
@@ -877,7 +877,7 @@ function acopiosCompany(req, res) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
-      console.log(req.body);
+      //console.log(req.body);
       serviceInitAcopiosCompany(req, function(data, err) {
           if (err) {
               res.status(500).send({ message: err });
