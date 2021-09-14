@@ -1158,7 +1158,7 @@ function serviceInitProductorsCompany(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        console.log(error);
+        //console.log(error);
         next(null, error.response.data.message);
     });
 }
