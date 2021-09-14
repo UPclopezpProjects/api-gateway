@@ -493,7 +493,7 @@ function merchantsCompany(req, res) {
           if (err) {
               res.status(500).send({ message: err });
           }else {
-            res.status(200).send({ message: data.message, user: data.user });
+            res.status(200).send({ message: data.message, user: data.user, newToken: data.newToken });
               //console.log(data);
           }
       });
@@ -739,7 +739,7 @@ function carriersCompany(req, res) {
           if (err) {
               res.status(500).send({ message: err });
           }else {
-            res.status(200).send({ message: data.message, user: data.user });
+            res.status(200).send({ message: data.message, user: data.user, newToken: data.newToken });
               //console.log(data);
           }
       });
@@ -882,7 +882,7 @@ function acopiosCompany(req, res) {
           if (err) {
               res.status(500).send({ message: err });
           }else {
-            res.status(200).send({ message: data.message, user: data.user });
+            res.status(200).send({ message: data.message, user: data.user, newToken: data.newToken });
               //console.log(data);
           }
       });
@@ -1133,7 +1133,7 @@ function productorsCompany(req, res) {
           if (err) {
               res.status(500).send({ message: err });
           }else {
-            res.status(200).send({ message: data.message, user: data.user });
+            res.status(200).send({ message: data.message, user: data.user, newToken: data.newToken });
               //console.log(data);
           }
       });
