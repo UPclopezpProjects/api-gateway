@@ -38,7 +38,7 @@ global.path = {
   resetPassword: '/resetPassword',
   permitions: '/permitions',
   getData: '/getData',
-  getDataOut: '/getDataOut',
+  getHistoryOut: '/getHistoryOut',
   merchantsCompany: '/dataOfCompany',
   getCompanyM: '/getCompany',
   merchantIn: '/merchantsDataIn',

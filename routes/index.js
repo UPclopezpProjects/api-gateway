@@ -7,10 +7,6 @@ var router = express.Router();
 router.get('/images', TransactionController.getFileStream);
 router.get('/images/:id', TransactionController.getFileStream);
 
-router.get('/getData', TransactionController.getData);
-router.get('/getDataOut', TransactionController.getDataOut);
-
-
 router.post('/login', TransactionController.login);
 router.post('/getInitialNonce', TransactionController.getInitialNonce);
 router.get('/verifyEmail', TransactionController.verifyEmail);
@@ -42,8 +38,15 @@ router.post('/getCompanyP', TransactionController.getCompanyP);
 router.post('/productorsData', TransactionController.productorsData);
 router.post('/productorsCompany', TransactionController.productorsCompany);
 
-router.post('/traceability', TransactionController.traceability);
 router.get('/getHistory', TransactionController.getHistory);
+router.get('/getHistoryOut', TransactionController.getHistoryOut);
+
+router.post('/traceability', TransactionController.traceability);
+router.get('/getData', TransactionController.getData);
+
+
+
+
 
 //router.post('/traceabilityM', TransactionController.traceabilityM);
 //router.post('/traceabilityC', TransactionController.traceabilityC);

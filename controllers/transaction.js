@@ -287,7 +287,7 @@ async function getData(req, res) {
   }
 }
 
-function getDataOut(req, res){
+function getHistoryOut(req, res){
   serviceInitCheckPermission(req, function(dataPermit, err) {
     if(dataPermit.message == true){
       var typeOfUser = req.query.typeOfUser;
@@ -348,7 +348,7 @@ function serviceInitCheckPermission(req, next) {
 }
 
 function serviceInitGetDataOutA(req, next) {
-    var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.getDataOut+'';
+    var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.getHistoryOut+'';
     axios.post(url, {
         fid: req.query.fid
     })
@@ -363,7 +363,7 @@ function serviceInitGetDataOutA(req, next) {
 }
 
 function serviceInitGetDataOutM(req, next) {
-    var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.getDataOut+'';
+    var url = 'http://'+host.merchantOut+':'+port.merchantOut+''+path.getHistoryOut+'';
     //console.log(url);
     axios.post(url, {
         fid: req.query.fid
@@ -1790,7 +1790,7 @@ module.exports = {
   //traceabilityA,
   //traceabilityP,
   getData,
-  getDataOut,
+  getHistoryOut,
   getFileStream,
   getInitialNonce,
   verifyEmail,
