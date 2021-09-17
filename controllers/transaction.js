@@ -371,6 +371,11 @@ function serviceInitGetDataOutA(req, next) {
     var url = 'http://'+host.acopioOut+':'+port.acopioOut+''+path.getHistoryOut+'';
     axios.post(url, {
         fid: req.query.fid
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -387,6 +392,11 @@ function serviceInitGetDataOutM(req, next) {
     //console.log(url);
     axios.post(url, {
         fid: req.query.fid
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
