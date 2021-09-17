@@ -69,7 +69,12 @@ function getHistory(req, res) {
 function serviceInitHistoryM(req, next) {
     var url = 'http://'+host.merchantIn+':'+port.merchantIn+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
     //console.log(url);
-    axios.get(url)
+    axios.get(url,
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
+    })
     .then(response => {
         //console.log(response.data);
         next(response.data, null);
@@ -83,7 +88,12 @@ function serviceInitHistoryM(req, next) {
 function serviceInitHistoryC(req, next) {
     var url = 'http://'+host.carrier+':'+port.carrier+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
    //console.log(url);
-    axios.get(url)
+    axios.get(url,
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
+    })
     .then(response => {
         //console.log(response.data);
         next(response.data, null);
@@ -97,7 +107,12 @@ function serviceInitHistoryC(req, next) {
 function serviceInitHistoryA(req, next) {
     var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.getHistory+'?nameOfCompany='+req.query.nameOfCompany+'&typeOfUser='+req.query.typeOfUser;
     //console.log(url);
-    axios.get(url)
+    axios.get(url,
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
+    })
     .then(response => {
         //console.log(response.data);
         next(response.data, null);
