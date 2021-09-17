@@ -556,6 +556,11 @@ function serviceInitGetCompanyM(req, next) {
       headers: {
         'Authorization': req.headers.authorization
       }
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -798,6 +803,11 @@ function serviceInitGetCompanyC(req, next) {
     var url = 'http://'+host.carrier+':'+port.carrier+''+path.getCompanyC+'';
     axios.post(url, {
         email: req.body.email
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -940,6 +950,11 @@ function serviceInitGetCompanyA(req, next) {
     var url = 'http://'+host.acopioIn+':'+port.acopioIn+''+path.getCompanyA+'';
     axios.post(url, {
         email: req.body.email
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
@@ -1191,6 +1206,11 @@ function serviceInitGetCompanyP(req, next) {
     var url = 'http://'+host.productor+':'+port.productor+''+path.getCompanyP+'';
     axios.post(url, {
         email: req.body.email
+    },
+    {
+      headers: {
+        'Authorization': req.headers.authorization
+      }
     })
     .then(response => {
         //console.log(response.data);
