@@ -1284,7 +1284,7 @@ function serviceInitProductors(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        console.log(error);
+        //console.log(error);
         //console.log(error.response.data.message);
         next(null, error.response.data.message);
     });
@@ -1444,7 +1444,7 @@ function serviceInitUserCreationRoot(req, next) {
         gas: req.body.gas,
         typeOfOperation: req.body.typeOfOperation,
         nameOfOperation: req.body.nameOfOperation,
-        hashX: req.body.hashX,
+        hashX: req.body.hashX
     },
     {
         headers: {
