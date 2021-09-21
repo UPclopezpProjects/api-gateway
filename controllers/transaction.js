@@ -1390,6 +1390,7 @@ function userCreation(req, res){
         //console.log(err);
         res.status(500).send({ message: err });
       }else {
+        console.log(data);
         if(data.user){
           res.status(200).send({ message: data.message, A: data.A, tokenNANB: data.tokenNANB, user: data.user, token: data.token });
         }else if(data.sessionID){
