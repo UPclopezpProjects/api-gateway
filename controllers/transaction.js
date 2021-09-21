@@ -1457,7 +1457,7 @@ function serviceInitUserCreationRoot(req, next) {
         next(response.data, null);
     })
     .catch(error => {
-        //console.log(error);
+        console.log(error);
         //console.log(error.response.data.message);
         next(null, error.response.data.message);
     });
