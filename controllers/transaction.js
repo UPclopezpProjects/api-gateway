@@ -657,7 +657,7 @@ function merchantsDataOut(req, res){
     res.status(500).send({message: 'No hay token'});
     return;
   }else {
-    if (req.body.id == '' || req.body.quantity == '') {
+    if (req.body.fid == '' || req.body.quantity == '') {
       res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
       return;
     }else if (req.body.quantity <= 0) {
@@ -1042,12 +1042,11 @@ function serviceInitAcopios(req, next) {
 }
 
 function acopiosDataOut(req, res){
-  console.log(req);
   if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
     }else {
-      if (req.body.id == '' || req.body.quantity == '') {
+      if (req.body.fid == '' || req.body.quantity == '') {
         res.status(400).send({ message: 'Error al ingresar los datos, intenta nuevamente' });
         return;
       }else if (req.body.quantity <= 0) {
