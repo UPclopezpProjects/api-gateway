@@ -1042,6 +1042,7 @@ function serviceInitAcopios(req, next) {
 }
 
 function acopiosDataOut(req, res){
+  console.log(req);
   if (req.headers.authorization == '' || req.headers.authorization == null || req.headers.authorization == undefined || !req.headers.authorization) {
       res.status(500).send({message: 'No hay token'});
       return;
